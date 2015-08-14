@@ -1,0 +1,68 @@
+[core]
+	attributes = ~/.gitattributes
+	autocrlf = input
+	excludesfile = ~/.gitignore
+	# editor = emacs
+	# whitespace = blank-at-eol,blank-at-eof,space-before-tab,tab-in-indent,trailing-space,fix
+
+#[apply]
+#  whitespace = fix
+
+[credential]
+	helper = cache --timeout=3600
+
+[init]
+	templatedir = ~/.git_template
+
+[alias]
+	a = add
+	aliases = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\t=> \\2/' | sort
+	br = branch
+	branches = branch -a
+	ci = commit
+	co = checkout
+	contributors = shortlog --summary --numbered
+	current=!git rev-parse --abbrev-ref HEAD
+	dev = checkout develop
+	develop = checkout develop
+	diffstat = diff --stat -r
+	df = diff
+	dfl = diff HEAD^ HEAD
+	dfs = diff --staged
+	dfstat = diff --stat -r
+	dm = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d; git remote -v update -p"
+	l = log --oneline --graph --decorate -n 20
+	ll = log --oneline --graph --decorate
+	last = log -1 HEAD
+	lg = log -p
+	master = checkout master
+	po = push origin
+	tags = tag -l
+	remotes = remote -v
+	renamebranch = !git rev-parse --abbrev-ref HEAD | git branch -m 
+	s = status -s
+	st = status
+	upfix = !git rev-parse --abbrev-ref HEAD | 
+	undo = checkout --
+	undolastcommit = reset --soft HEAD~1
+	unstage = reset HEAD
+	untrack = rm --cache --
+
+# branch, diff, interactive, status
+# normal, black, red, green, yellow, blue, magenta, cyan, white
+# bold, dim, ul, blink, reverse
+[color]
+	ui = auto
+[color "branch"]
+	current = green bold
+	local = normal
+	remote = cyan
+[color "diff"]
+	meta = normal
+	frag = cyan
+	old = red
+	new = green
+[color "status"]
+	added = green
+	changed = red
+	untracked = cyan
