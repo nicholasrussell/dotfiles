@@ -1,0 +1,17 @@
+echo
+royals=$(curl -s 'https://erikberg.com/mlb/standings.json' | jq '.standing[] | select(.team_id == "kansas-city-royals")')
+wins=$(echo $royals | jq '.won')
+losses=$(echo $royals | jq '.lost')
+win_pct=$(echo $royals | jq '.win_percentage')
+win_pct=${win_pct:1:-1}
+rank=$(echo $royals | jq '.ordinal_rank')
+rank=${rank:1:-1}
+gb=$(echo $royals | jq '.games_back')
+streak=$(echo $royals | jq '.streak')
+streak=${streak:1:-1}
+last_ten=$(echo $royals | jq '.last_ten')
+last_ten=${last_ten:1:-1}
+printf "\033[1;34mKansas City Royals Stats\033[0m\n"
+printf "\033[1;37m  W  L  Win%% Place   GB Streak  L10\033[0m\n"
+printf "%3s%3s%6s%6s%5s%7s%5s\n" $wins $losses $win_pct $rank $gb $streak $last_ten
+echo
