@@ -106,7 +106,7 @@ unset sbt_version sbt_binary_url
 # Typesafe Activator
 log_header2 "Preparing to install Typesafe Activator..."
 
-activator_version="1.3.5"
+activator_version="1.3.6"
 activator_binary_url="http://downloads.typesafe.com/typesafe-activator/${activator_version}/typesafe-activator-${activator_version}.zip"
 if wget -q --spider --timeout=30 ${activator_binary_url}; then
     activator_distributions=($(ls /opt | grep activator\-.* | sed "s/^.*activator-\([0-9.]*\).*/\1/"))

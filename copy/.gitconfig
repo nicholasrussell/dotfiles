@@ -4,7 +4,7 @@
 
 [core]
     attributes = ~/.gitattributes
-    # autocrlf = input
+    autocrlf = input
     editor = emacsclient
     excludesfile = ~/.gitignore
     # whitespace = blank-at-eol,blank-at-eof,space-before-tab,tab-in-indent,trailing-space,fix
@@ -30,6 +30,7 @@
     develop = checkout develop
     diffstat = diff --stat -r
     df = diff
+    dfl = diff HEAD^ HEAD
     dfs = diff --staged
     dfstat = diff --stat -r
     k = !gitk
@@ -43,6 +44,7 @@
     po = push origin
     tags = tag -l
     remotes = remote -v
+    renamebranch = !git rev-parse --abbrev-ref HEAD | git branch -m 
     s = status -s
     st = status
     undo = checkout --

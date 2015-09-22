@@ -29,7 +29,7 @@ fi
 # NodeJS
 if [ ! -e /etc/apt/sources.list.d/nodesource.list ]; then
     log_info "Adding NodeJS sources..."
-    curl -sL https://deb.nodesource.com/setup | sudo bash -
+    curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
 fi
 
 # Ansible
@@ -67,6 +67,7 @@ dotfiles_apt_tools=(
     libreadline-dev
     bash-completion
     ttf-ancient-fonts
+    gitk
     git-flow
     # ttf-mscorefonts-installer
     # zsh
@@ -104,6 +105,7 @@ dotfiles_apt_tools=(
     rdesktop
     dkms # Recommended for VirtualBox
     virtualbox-4.3 # Downloads: http://download.virtualbox.org/virtualbox/
+    vagrant
     perl
     julia
     apache2

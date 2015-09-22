@@ -27,7 +27,7 @@
                          epl
                          exec-path-from-shell
                          f
-                         github-theme
+                         ; github-theme
                          ; go-mode
                          ; groovy-electric
                          groovy-mode
