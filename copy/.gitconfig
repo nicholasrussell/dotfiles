@@ -34,7 +34,8 @@
     dfs = diff --staged
     dfstat = diff --stat -r
     k = !gitk
-    l = log --pretty=oneline -n 20 --graph --abbrev-commit
+    l = log --oneline -n 20 --graph --abbrev-commit
+    ll = log --oneline --decorate --graph
     last = log -1 HEAD
     lg = log -p
     master = checkout master
