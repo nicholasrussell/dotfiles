@@ -10,6 +10,6 @@ shopt -s globstar
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 # Set global editor
-export VISUAL="emacsclient"
+export VISUAL="vim"
 export EDITOR="$VISUAL"
 export ALTERNATE_EDITOR=""

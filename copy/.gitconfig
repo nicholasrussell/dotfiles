@@ -5,7 +5,7 @@
 [core]
     attributes = ~/.gitattributes
     autocrlf = input
-    editor = emacsclient
+    editor = vim
     excludesfile = ~/.gitignore
     # whitespace = blank-at-eol,blank-at-eof,space-before-tab,tab-in-indent,trailing-space,fix
 
@@ -34,8 +34,8 @@
     dfs = diff --staged
     dfstat = diff --stat -r
     k = !gitk
-    l = log --oneline -n 20 --graph --abbrev-commit
-    ll = log --oneline --decorate --graph
+    l = log --oneline --graph --decorate -n 20
+    ll = log --oneline --graph --decorate
     last = log -1 HEAD
     lg = log -p
     master = checkout master

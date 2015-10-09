@@ -112,6 +112,7 @@ dotfiles_apt_tools=(
     tomcat7
     # tomcat8 # dne
     dia
+    graphviz
     postgresql-9.3
     pgadmin3
     # mongodb
@@ -120,6 +121,7 @@ dotfiles_apt_tools=(
     krita
     hipchat
     hexchat
+    # wireshark
 )
 
 dotfiles_apt_tools=($(setdiff "${dotfiles_apt_tools[*]}" "$(dpkg --get-selections | grep -v deinstall | awk '{print $1}' | sed 's/:.*//')"))
