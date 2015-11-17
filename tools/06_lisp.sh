@@ -1,5 +1,52 @@
 #!/usr/bin/env bash
 
+# Emacs
+log_header2 "Preparing to install Emacs..."
+
+emacs_version="24.5"
+emacs_binary_url="http://ftp.gnu.org/gnu/emacs/emacs-${emacs_version}.tar.gz"
+if wget -q --spider --timeout=30 ${emacs_binary_url}; then
+    emacs_installations=($(ls /opt | grep emacs\-.* | sed "s/^.*emacs-\([0-9.]*\).*/\1/"))
+    if (( ${#emacs_installations[@]} > 0 )); then
+        for emacs_installation in "${emacs_installations[@]}"; do
+            if [ "$emacs_installation" != "$emacs_version" ]; then
+                log_info "Removing Emacs ${emacs_installation}..."
+                sudo rm -r /opt/emacs-${emacs_installation}
+            fi
+        done
+        unset emacs_installation
+    fi
+    unset emacs_installations
+
+    if [ ! -e /opt/emacs-${emacs_version} ]; then
+        log_info "Downloading Emacs ${emacs_version}..."
+        current_working_dir=$(pwd)
+        wget -q -O /tmp/emacs-${emacs_version}.tar.gz ${emacs_binary_url}
+        tar xzf /tmp/emacs-${emacs_version}.tar.gz -C /tmp
+        cd /tmp/emacs-${emacs_version}
+        log_info "Configuring Emacs ${emacs_version}..."
+        chmod +x configure
+        ./configure --prefix=/opt/emacs-${emacs_version} > /dev/null
+        log_info "Compiling Emacs ${emacs_version}..."
+        make > /dev/null
+        log_info "Installing Emacs ${emacs_version}..."
+        sudo make install > /dev/null
+        cd $current_working_dir
+        rm -rf /tmp/emacs-${emacs_version}/
+        rm -f /tmp/emacs-${emacs_version}.tar.gz
+        unset current_working_dir
+        sudo ln -sf /opt/emacs-${emacs_version} /opt/emacs
+        sudo ln -sf /opt/emacs/bin/emacs /usr/local/bin/emacs
+    else
+        log_info "Emacs ${emacs_version} already installed"
+    fi
+
+    log_success "Finished installing Emacs ${emacs_version}\n"
+else
+    log_error "Could not download Emacs ${emacs_version} because the binary does not exist on the remote server\n"
+fi
+unset emacs_version emacs_binary_url
+
 # MIT Scheme
 log_header2 "Preparing to install MIT Scheme..."
 

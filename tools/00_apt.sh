@@ -48,6 +48,9 @@ dotfiles_apt_tools=(
     git
 
     build-essential
+    autoconf
+    automake
+    libtool
     libssl-dev
     software-properties-common
     python-software-properties
@@ -65,6 +68,19 @@ dotfiles_apt_tools=(
     libX11-dev
     libxext-dev
     libreadline-dev
+    texinfo
+    xorg-dev
+    libgtk2.0-dev
+    libncurses5-dev
+    libdbus-1-dev
+    libgif-dev
+    libtiff-dev
+    libm17n-dev
+    libpng12-dev
+    librsvg2-dev
+    libotf-dev
+    libxml2-dev
+    libacl1-dev
     bash-completion
     ttf-ancient-fonts
     gitk
@@ -91,7 +107,7 @@ dotfiles_apt_tools=(
     valgrind
     gdb
     gedit
-    emacs
+    # emacs
     vim
     google-chrome-stable
     firefox
