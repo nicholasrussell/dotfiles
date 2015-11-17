@@ -10,6 +10,9 @@
 ;; Log communication with nREPL server (usefule for debugging CIDER)
 ; (setq nrepl-log-messages t)
 
+; Enable eldoc
+(add-hook 'cider-mode-hook #'eldoc-mode)
+
 (require 'ac-cider)
 (add-hook 'cider-mode-hook 'ac-flyspell-workaround)
 (add-hook 'cider-mode-hook 'ac-cider-setup)
@@ -38,7 +41,6 @@
 ;; Use TAB to auto-complete in CIDER buffers (incompatible with (setq tab-always-indent 'complete))
 ;(defun set-auto-complete-as-completion-at-point-function ()
 ;  (setq completion-at-point-functions '(auto-complete)))
-
 ;(add-hook 'auto-complete-mode-hook 'set-auto-complete-as-completion-at-point-function)
 ;(add-hook 'cider-mode-hook 'set-auto-complete-as-completion-at-point-function)
 
