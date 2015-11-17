@@ -16,7 +16,7 @@
 (delete-selection-mode t)
 
 ;; Soft-wrap lines
-(global-visual-line-mode t)
+; (global-visual-line-mode t)
 
 ;; Global newline and indent
 ;(define-key global-map (kbd "RET") 'newline-and-indent)
@@ -29,6 +29,12 @@
 
 ;; Other keybinds
 (global-set-key (kbd "M-/") 'hippie-expand)
+;(setq hippie-expand-try-functions-list
+;      '(try-expand-dabbrev
+;        try-expand-dabbrev-all-buffers
+;        try-expand-dabbrev-from-kill
+;        try-complete-lisp-symbol-partially
+;        try-complete-lisp-symbol))
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;; Apropos settings
@@ -95,6 +101,8 @@
 
 ;; Visible bell
 (setq visible-bell t)
+;; No bell
+;(setq ring-bell-function 'ignore)
 
 (add-hook 'after-make-frame-functions
           (lambda (frame)
@@ -115,10 +123,27 @@
   (exec-path-from-shell-initialize))
 
 ;; Nyan
-(require 'nyan-mode)
+;(require 'nyan-mode)
 ;(setq-default nyan-wavy-trail t)
-(nyan-mode)
-; (nyan-start-animation)
+;(nyan-mode)
+;(nyan-start-animation)
+
+;; Comments
+(defun toggle-comment-on-line ()
+  "comment or uncomment current line"
+  (interactive)
+  (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
+(global-set-key (kbd "C-;") 'toggle-comment-on-line)
+
+(setq electric-indent-mode nil)
+
+;; Kills tabs
+(defun kill-tabs ()
+  (interactive)
+  (set-variable 'tab-width 2)
+  (mark-whole-buffer)
+  (untabify (region-beginning) (region-end))
+  (keyboard-quit))
 
 
 (provide 'init-editing)

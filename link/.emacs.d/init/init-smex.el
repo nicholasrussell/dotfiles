@@ -2,6 +2,7 @@
 
 (require 'smex)
 
+(setq smex-save-file (concat user-emacs-directory ".smex-items"))
 (smex-initialize)
 ; Key Bindings for smex
 (global-set-key (kbd "M-x") 'smex)

@@ -1,4 +1,8 @@
 ;; Backup settings
+
+;; Don't create ~ files when editing
+; (setq create-lockfiles nil)
+
 (defvar --backup-directory (concat user-emacs-directory "backups"))
 (if (not (file-exists-p --backup-directory))
     (make-directory --backup-directory t))
@@ -23,4 +27,3 @@
 
 
 (provide 'init-backup)
-

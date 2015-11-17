@@ -14,6 +14,7 @@
                          cider
                          cljsbuild-mode
                          clojure-mode
+                         clojure-mode-extra-font-locking
                          color-theme-sanityinc-tomorrow
                          ; csv-mode
                          ; csv-nav
@@ -35,6 +36,7 @@
                          ht
                          icicles
                          ido
+                         ido-ubiquitous
                          ; inf-groovy
                          ; jedi ; Python auto-completion
                          js2-mode
@@ -46,7 +48,7 @@
                          ; mmm-mode
                          monokai-theme
                          ; multiple-cursors
-                         ; mwe-log-commands
+                         mwe-log-commands
                          neotree
                          nyan-mode
                          org
@@ -55,6 +57,7 @@
                          pkg-info
                          ; popwin
                          ; project-local-variables
+                         projectile
                          queue
                          ; racket-mode
                          rainbow-delimiters
@@ -71,6 +74,7 @@
                          solarized-theme
                          ; sublimity
                          ; tabbar
+                         tagedit
                          tangotango-theme
                          web-mode
                          wgrep
@@ -113,6 +117,7 @@
 (require 'init-js2-mode)
 (require 'init-markdown)
 (require 'init-sensitive-mode)
+(require 'init-projectile)
 
 ;; Allow access from emacsclient
 (require 'server)
@@ -138,6 +143,9 @@
           (lambda ()
             (message "init completed in %.2fms"
                      (* 1000 (float-time (time-subtract after-init-time before-init-time))))))
+
+; Set all yes / no questions to y / n
+(fset 'yes-or-no-p 'y-or-n-p)
 
 
 (provide 'init)
