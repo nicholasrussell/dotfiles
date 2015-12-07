@@ -25,6 +25,9 @@ alias update="sudo apt-get update && sudo pip install -U pip && sudo npm update 
 # alias docker='sudo -E docker'
 
 alias gradle-java='gradle init --type java-library'
+alias gradle-scala='gradle init --type scala-library'
+alias gradle-groovy='gradle init --type groovy-library'
+alias gradle-basic='gradle init --type basic'
 
 alias java7='sudo update-java-alternatives -s java-7-oracle && echo "Please update JAVA_HOME"'
 alias java8='sudo update-java-alternatives -s java-8-oracle && echo "Please update JAVA_HOME"'
