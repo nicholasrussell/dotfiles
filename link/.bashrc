@@ -8,15 +8,6 @@ if [ ! -n "${DOTFILES:+1}" ]; then
     export DOTFILES=~/.dotfiles
 fi
 
-# enable programmable completion features
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
-fi
-
 shopt -s dotglob
 # Source files in the DOTFILES/source dir
 for dotfiles_source_file in $DOTFILES/source/*; do
@@ -24,3 +15,17 @@ for dotfiles_source_file in $DOTFILES/source/*; do
 done
 shopt -u dotglob
 unset dotfiles_source_file
+
+# enable programmable completion features
+# TODO is this necessary?
+if is_ubuntu; then
+    if ! shopt -oq posix; then
+      if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+      elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+      elif [ -f /usr/local/etc/bash_completion ]; then
+        . /usr/local/etc/bash_completion
+      fi
+    fi
+fi

@@ -80,6 +80,10 @@ function dotfiles_link() {
     done
     shopt -u dotglob
 
+    if is_osx; then
+        ln -sf ~/.profile ~/.bash_profile
+    fi
+
     log_success "Finished linking files\n"
 }
 
@@ -101,12 +105,16 @@ function dotfiles_init() {
 function dotfiles_tools() {
     log_header1 "Installing tools...\n"
 
-    local dotfiles_tool_file
-    for dotfiles_tool_file in $DOTFILES/tools/*; do
-        if [ "$dotfiles_tool_file" != "$DOTFILES/tools/manual" ]; then
-            source "$dotfiles_tool_file"
-        fi
-    done
+    if is_ubuntu; then
+        local dotfiles_tool_file
+        for dotfiles_tool_file in $DOTFILES/tools/*; do
+            if [ "$dotfiles_tool_file" != "$DOTFILES/tools/manual" ]; then
+                source "$dotfiles_tool_file"
+            fi
+        done
+    elif is_osx; then
+        source "$DOTFILES/tools/00_osx.sh"
+    fi
 
     log_success "Finished installing tools\n"
 }
