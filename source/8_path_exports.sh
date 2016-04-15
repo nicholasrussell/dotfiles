@@ -38,6 +38,7 @@ if is_ubuntu; then
 
     export PATH
 elif is_osx; then
+    export ANDROID_HOME=/usr/local/opt/android-sdk
     export GROOVY_HOME=/usr/local/opt/groovy/libexec
     export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"
 

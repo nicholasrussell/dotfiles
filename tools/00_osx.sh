@@ -109,6 +109,7 @@ dotfiles_npm_modules=(
     yo
     gulp
     semver
+    cordova
 )
 log_info "Installing npm modules..."
 for dotfiles_npm_module in ${dotfiles_npm_modules[@]}; do
@@ -124,7 +125,17 @@ unset dotfiles_npm_module dotfiles_npm_modules
 log_success "Finished installing npm modules"
 log_success "Finished installing NodeJS\n"
 
+# SASS
+log_header2 "Installing SASS..."
+sudo gem install sass
+log_success "Finished install SASS\n"
+
 ## Dev Tools
+
+# Mongo
+log_header2 "Installing MongoDB..."
+brew install mongodb --with-openssl
+log_success "Finished installing MongoDB\n"
 
 # Sublime Text
 log_header2 "Installing Sublime Text..."
@@ -157,7 +168,7 @@ log_success "Finished configuring vim\n"
 
 # Idea
 log_header2 "Installing IntelliJ Idea..."
-brew cask install intellij-idea
+brew cask install intellij-idea-ce
 log_success "Finished installing IntelliJ Idea\n"
 
 # SourceTree
@@ -202,6 +213,11 @@ log_success "Finished installing pip\n"
 log_header2 "Installing Ansible..."
 brew install ansible
 log_success "Finished installing Ansible\n"
+
+# Android
+log_header2 "Installing Android SDK..."
+brew install android-sdk
+log_success "Finished installing Android SDK\n"
 
 # Slack
 log_header2 "Installing Slack..."
