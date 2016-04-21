@@ -13,10 +13,10 @@ if [ ! -e /etc/apt/sources.list.d/google-chrome.list ]; then
 fi
 
 # HipChat
-if [ ! -e /etc/apt/sources.list.d/atlassian-hipchat.list ]; then
+if [ ! -e /etc/apt/sources.list.d/atlassian-hipchat4.list ]; then
     log_info "Adding HipChat sources..."
-    echo "deb http://downloads.hipchat.com/linux/apt stable main" | sudo tee /etc/apt/sources.list.d/atlassian-hipchat.list
-    sudo wget -q -O - https://www.hipchat.com/keys/hipchat-linux.key | sudo apt-key add -
+    sudo sh -c 'echo "deb https://atlassian.artifactoryonline.com/atlassian/hipchat-apt-client $(lsb_release -c -s) main" > /etc/apt/sources.list.d/atlassian-hipchat4.list'
+    wget -q -O - https://atlassian.artifactoryonline.com/atlassian/api/gpg/key/public | sudo apt-key add -
 fi
 
 # VirtualBox
@@ -24,12 +24,6 @@ if [ ! -e /etc/apt/sources.list.d/virtualbox.list ]; then
     log_info "Adding VirtualBox sources..."
     wget -q -O - https://www.virtualbox.org/download/oracle_vbox.asc | sudo apt-key add -
     sudo sh -c 'echo "deb http://download.virtualbox.org/virtualbox/debian trusty contrib" > /etc/apt/sources.list.d/virtualbox.list'
-fi
-
-# NodeJS
-if [ ! -e /etc/apt/sources.list.d/nodesource.list ]; then
-    log_info "Adding NodeJS sources..."
-    curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
 fi
 
 # Ansible
@@ -111,7 +105,6 @@ dotfiles_apt_tools=(
     vim
     google-chrome-stable
     firefox
-    nodejs
     jq
     exif
     kdiff3
@@ -135,7 +128,7 @@ dotfiles_apt_tools=(
     # redis
     ansible
     krita
-    hipchat
+    hipchat4
     hexchat
     # wireshark
 )

@@ -120,30 +120,30 @@ fi
 log_success "Finished configuring vim\n"
 
 # Idea
-log_header2 "Preparing to install IntelliJ Idea..."
-
-idea_version="14.1.4"
-idea_binary_url="http://download-cf.jetbrains.com/idea/ideaIC-${idea_version}.tar.gz"
-if wget -q --spider --timeout=30 ${idea_binary_url}; then
-    if [ ! -e /opt/idea ]; then
-        log_info "Downloading Idea ${idea_version}..."
-        wget -q -O /tmp/idea.tar.gz ${idea_binary_url}
-        sudo tar xzf /tmp/idea.tar.gz -C /opt
-        rm -f /tmp/idea.tar.gz
-        sudo mv /opt/idea-IC-* /opt/idea
-
-        idea_desktop="[Desktop Entry]\nName=IntelliJ IDEA\nComment=IntelliJ IDEA IDE\nExec=/opt/idea/bin/idea.sh\nIcon=/opt/idea/bin/idea.png\nTerminal=false\nStartupNotify=true\nType=Application\nCategories=Development;IDE;"
-        echo -e $idea_desktop | sudo tee /usr/share/applications/idea.desktop > /dev/null
-        sudo ln -sf /opt/idea/bin/idea.png /usr/share/pixmaps/idea.png
-        unset idea_desktop
-    else
-        log_info "Idea already installed"
-    fi
-    log_success "Finished installing Idea\n"
-else
-    log_error "Could not download Idea ${idea_version} because the binary does not exist on the remote server\n"
-fi
-unset idea_version idea_binary_url
+#log_header2 "Preparing to install IntelliJ Idea..."
+#
+#idea_version="14.1.4"
+#idea_binary_url="http://download-cf.jetbrains.com/idea/ideaIC-${idea_version}.tar.gz"
+#if wget -q --spider --timeout=30 ${idea_binary_url}; then
+#    if [ ! -e /opt/idea ]; then
+#        log_info "Downloading Idea ${idea_version}..."
+#        wget -q -O /tmp/idea.tar.gz ${idea_binary_url}
+#        sudo tar xzf /tmp/idea.tar.gz -C /opt
+#        rm -f /tmp/idea.tar.gz
+#        sudo mv /opt/idea-IC-* /opt/idea
+#
+#        idea_desktop="[Desktop Entry]\nName=IntelliJ IDEA\nComment=IntelliJ IDEA IDE\nExec=/opt/idea/bin/idea.sh\nIcon=/opt/idea/bin/idea.png\nTerminal=false\nStartupNotify=true\nType=Application\nCategories=Development;IDE;"
+#        echo -e $idea_desktop | sudo tee /usr/share/applications/idea.desktop > /dev/null
+#        sudo ln -sf /opt/idea/bin/idea.png /usr/share/pixmaps/idea.png
+#        unset idea_desktop
+#    else
+#        log_info "Idea already installed"
+#    fi
+#    log_success "Finished installing Idea\n"
+#else
+#    log_error "Could not download Idea ${idea_version} because the binary does not exist on the remote server\n"
+#fi
+#unset idea_version idea_binary_url
 
 # Sublime Text
 log_header2 "Preparing to install Sublime Text..."
