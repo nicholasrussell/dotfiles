@@ -16,6 +16,7 @@ function install_node {
     log_info "Installing node..."
     if ! nvm which node > /dev/null 2>&1; then
         nvm install node
+        nvm alias default node
         log_info "Finished installing node."
     else
         log_info "node is already installed!"
