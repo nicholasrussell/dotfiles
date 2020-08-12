@@ -5,7 +5,5 @@ if is_debian; then
         source $bcfile
     done
 elif is_macos; then
-    if [ -f $(brew --prefix)/etc/bash_completion ]; then
-        source $(brew --prefix)/etc/bash_completion
-    fi
+    [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 fi

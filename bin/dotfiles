@@ -125,6 +125,7 @@ function dotfiles_tools {
     source "$DOTFILES/tools/3_python.sh"
     source "$DOTFILES/tools/4_editors.sh"
     source "$DOTFILES/tools/5_misc.sh"
+    source "$DOTFILES/tools/6_completion.sh"
 
     log_success "Finished installing tools\n"
 }
