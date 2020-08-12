@@ -121,6 +121,7 @@ function dotfiles_tools {
 
     source "$DOTFILES/tools/0_bootstrap.sh"
     source "$DOTFILES/tools/1_jvm.sh"
+    source "$DOTFILES/tools/2_js.sh"
     source "$DOTFILES/tools/4_editors.sh"
 
     log_success "Finished installing tools\n"
