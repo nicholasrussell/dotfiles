@@ -129,7 +129,7 @@ function dotfiles_main {
 
 # Prompt for sudo early
 sudo -E -s -- <<EOS
-log_header1 "Beginning system set up...\n"
+echo -e "\r\033[1;36mBeginning system set up...\n\033[0m";
 EOS
 
 dotfiles_main
