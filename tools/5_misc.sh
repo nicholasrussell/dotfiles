@@ -17,7 +17,7 @@ function install_htop {
 install_htop
 
 function install_docker_macos {
-    brew cask install docker
+    idempotent_brew_install cask docker
     idempotent_brew_install docker-machine
     idempotent_brew_install docker-compose
 }

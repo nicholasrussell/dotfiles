@@ -73,6 +73,10 @@ function idempotent_brew_install {
     fi
     if ! is_brew_formula_installed "$formula"; then
         log_info "Installing Brew formula $formula..."
+        if [ "$1" == "cask" ]; then
+            local temp_args=($@)
+            brew cask install ${temp_args[@]:1}
+        fi;
         brew install $@
         log_info "Finished installing $formula."
     else
