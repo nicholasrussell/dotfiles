@@ -14,5 +14,5 @@ if is_macos; then
     idempotent_brew_install pip-completion
 fi
 
-log_header2 "Finished setting up auto completion."
+log_header2 "Finished setting up auto completion.\n"
 

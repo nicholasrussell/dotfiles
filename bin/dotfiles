@@ -119,13 +119,10 @@ function dotfiles_hook {
 function dotfiles_tools {
     log_header1 "Installing tools...\n"
 
-    source "$DOTFILES/tools/0_bootstrap.sh"
-    source "$DOTFILES/tools/1_jvm.sh"
-    source "$DOTFILES/tools/2_js.sh"
-    source "$DOTFILES/tools/3_python.sh"
-    source "$DOTFILES/tools/4_editors.sh"
-    source "$DOTFILES/tools/5_misc.sh"
-    source "$DOTFILES/tools/6_completion.sh"
+    local dotfiles_tools_file
+    for dotfiles_tools_file in $DOTFILES/tools/*; do
+        source "$dotfiles_tools_file"
+    done
 
     log_success "Finished installing tools\n"
 }
