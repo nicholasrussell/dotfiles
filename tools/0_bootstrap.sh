@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 ## Misc tools
 
-log_info "Ensuring bootstrapping tools exist..."
+log_header2 "Ensuring bootstrapping tools exist..."
 
 # https://github.com/cowboy/dotfiles/blob/bbb73a2143737f996913da7379ed20fbd2348d6b/bin/dotfiles#L134
 function setdiff {
@@ -50,6 +50,20 @@ function apt_update {
     sudo apt-get -qq update
 }
 
+function is_brew_formula_installed {
+    brew list "$1" > /dev/null 2>&1
+}
+
+function idempotent_brew_install {
+    if ! is_brew_formula_installed "$1"; then
+        log_info "Installing Brew formula $1..."
+        brew install "$1"
+        log_info "Finished installing $1."
+    else
+        log_info "Brew formula $1 is already installed!"
+    fi
+}
+
 # Package Manager
 function update_package_manager_debian {
     apt_update
@@ -59,7 +73,7 @@ function update_package_manager_macos {
     if ! which brew > /dev/null; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
     fi
-    brew update
+    brew update > /dev/null 2>&1
 }
 
 function update_package_manager {
@@ -90,13 +104,14 @@ function install_bootstrap_tools_debian {
 }
 
 function install_bootstrap_tools_macos {
-    brew install wget curl
-    brew install git --build_from_source
-    brew cask install tcl
-    brew install openssl jq
+    idempotent_brew_install wget
+    idempotent_brew_install curl
+    is_brew_formula_installed git || brew install git --build_from_source
+    idempotent_brew_install openssl
+    idempotent_brew_install jq
 }
 
-function install_boostrap_tools {
+function install_bootstrap_tools {
     log_info "Installing bootstrapping tools..."
     if is_macos; then
         install_bootstrap_tools_macos
@@ -107,3 +122,5 @@ function install_boostrap_tools {
 
 update_package_manager
 install_bootstrap_tools
+
+log_info "Finished installing bootstrapping tools.\n"

@@ -105,13 +105,25 @@ function dotfiles_source {
 }
 
 function dotfiles_hook {
+    log_header1 "Running hooks..."
     if [ -n "${DOTFILES_GIT_USERNAME:+1}" ] && [ -n "${DOTFILES_GIT_EMAIL:+1}" ]; then
         # Replace .gitconfig values
         log_info "Setting global git user information..."
         sed -i '' "s/GIT_USERNAME/${DOTFILES_GIT_USERNAME}/g" ~/.gitconfig
         sed -i '' "s/GIT_EMAIL/${DOTFILES_GIT_EMAIL}/g" ~/.gitconfig
-        log_info "Finished setting global git user information"
+        log_info "Finished setting global git user information."
     fi
+    log_success "Finished running hooks.\n"
+}
+
+function dotfiles_tools {
+    log_header1 "Installing tools...\n"
+
+    source "$DOTFILES/tools/0_bootstrap.sh"
+    source "$DOTFILES/tools/1_jvm.sh"
+    source "$DOTFILES/tools/4_editors.sh"
+
+    log_success "Finished installing tools\n"
 }
 
 function dotfiles_main {
@@ -121,6 +133,7 @@ function dotfiles_main {
     dotfiles_link
     dotfiles_source
     dotfiles_hook
+    dotfiles_tools
 
     dotfiles_post_hook
 }
