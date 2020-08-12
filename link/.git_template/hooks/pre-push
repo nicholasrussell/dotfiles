@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+protected_branch='master'
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+if [ $protected_branch = $current_branch ]
+then
+    printf "Push to branch ${CLR_RED}${protected_branch}${CLR_NONE}? [Y/n] "
+    read -n 1 -r REPLY < /dev/tty
+    echo
+    if echo $REPLY | grep -E '^[Yy]$' > /dev/null
+    then
+        exit 0
+    fi
+    exit 1
+fi
+
+exit 0

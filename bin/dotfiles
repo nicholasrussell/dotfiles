@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+
+## Bootstrap
+export DOTFILES=~/.dotfiles
+
+function log_header1 { echo -e "\r\033[1;36m$@\033[0m"; }
+function log_header2 { echo -e "\r\033[1;34m$@\033[0m"; }
+function log_info { echo -e "\r\033[0;34m$@\033[0m"; }
+function log_warn { echo -e "\r\033[1;33m$@\033[0m"; }
+function log_success { echo -e "\r\033[1;32m$@\033[0m"; }
+function log_error { echo -e "\r\033[1;31m$@\033[0m"; }
+
+## dotfiles functions
+function dotfiles_pre_hook {
+    local dotfiles_pre_hook
+    dotfiles_pre_hook=$DOTFILES/hook/pre_dotfiles.sh
+    if [ -e $dotfiles_pre_hook ]; then
+        log_info "Running pre hook...\n"
+        source $dotfiles_pre_hook
+    fi
+}
+
+function dotfiles_post_hook {
+    local dotfiles_post_hook
+    dotfiles_post_hook=$DOTFILES/hook/post_dotfiles.sh
+    if [ -e $dotfiles_post_hook ]; then
+        log_info "Running post hook...\n"
+        source $dotfiles_post_hook
+    fi
+}
+
+function dotfiles_copy {
+    if [ -e $DOTFILES/backup/copy ]; then
+        rm -r $DOTFILES/backup/copy
+    fi
+    mkdir -p $DOTFILES/backup/copy
+
+    log_header1 "Copying files..."
+    shopt -s dotglob
+    shopt -s globstar
+    local dotfiles_copy
+    for dotfiles_copy in $DOTFILES/copy/**/*; do
+        if [ -f $dotfiles_copy ]; then
+            dotfiles_copy=$(echo $dotfiles_copy | sed -e 's,'"$DOTFILES"/copy/',,')
+            if [ -e ~/${dotfiles_copy} ]; then
+                log_warn "Backing up ~/${dotfiles_copy} to $DOTFILES/backup/copy..."
+                cp -L ~/${dotfiles_copy} $DOTFILES/backup/copy
+                rm -r ~/${dotfiles_copy}
+            fi
+            file_dir="$(dirname ~/${dotfiles_copy})"
+            if [ ! -d $file_dir ]; then
+                mkdir -p $file_dir
+            fi
+            log_info "Copying ${dotfiles_copy} to ~/${dotfiles_copy}..."
+            cp -R $DOTFILES/copy/${dotfiles_copy} ~/${dotfiles_copy}
+        fi
+    done
+    shopt -u dotglob
+    shopt -u globstar
+
+    log_success "Finished copying files\n"
+}
+
+function dotfiles_link {
+    if [ -e $DOTFILES/backup/link ]; then
+        rm -r $DOTFILES/backup/link
+    fi
+    mkdir -p $DOTFILES/backup/link
+
+    log_header1 "Linking files..."
+    shopt -s dotglob
+    shopt -s globstar
+    local dotfiles_link
+    for dotfiles_link in $DOTFILES/link/**/*; do
+        if [ -f $dotfiles_link ]; then
+            dotfiles_link=$(echo $dotfiles_link | sed -e 's,'"$DOTFILES"/link/',,')
+            if [ -e ~/${dotfiles_link} ]; then
+                log_warn "Backing up ~/${dotfiles_link} to $DOTFILES/backup/link..."
+                cp -L ~/${dotfiles_link} $DOTFILES/backup/link
+            fi
+            file_dir="$(dirname ~/${dotfiles_link})"
+            if [ ! -d $file_dir ]; then
+                mkdir -p $file_dir
+            fi
+            log_info "Linking ~/${dotfiles_link} to $DOTFILES/link/${dotfiles_link}..."
+            ln -sf $DOTFILES/link/${dotfiles_link} ~/${dotfiles_link}
+        fi
+    done
+    shopt -u dotglob
+    shopt -u globstar
+
+    if is_macos; then
+        ln -sf ~/.profile ~/.bash_profile
+    fi
+
+    log_success "Finished linking files\n"
+}
+
+function dotfiles_source {
+    # Source files in the DOTFILES/source dir
+    local dotfiles_source_file
+    for dotfiles_source_file in $DOTFILES/source/*; do
+        source "$dotfiles_source_file"
+    done
+}
+
+function dotfiles_hook {
+    if [ -n "${DOTFILES_GIT_USERNAME:+1}" ] && [ -n "${DOTFILES_GIT_EMAIL:+1}" ]; then
+        # Replace .gitconfig values
+        log_info "Setting global git user information..."
+        sed -i '' "s/GIT_USERNAME/${DOTFILES_GIT_USERNAME}/g" ~/.gitconfig
+        sed -i '' "s/GIT_EMAIL/${DOTFILES_GIT_EMAIL}/g" ~/.gitconfig
+        log_info "Finished setting global git user information"
+    fi
+}
+
+function dotfiles_main {
+    dotfiles_pre_hook
+
+    dotfiles_copy
+    dotfiles_link
+    dotfiles_source
+    dotfiles_hook
+
+    dotfiles_post_hook
+}
+
+## Run dotfiles
+
+# Prompt for sudo early
+sudo -E -s -- <<EOS
+log_header1 "Beginning system set up...\n"
+EOS
+
+dotfiles_main
+
+log_success "Done!"
