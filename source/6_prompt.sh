@@ -7,6 +7,7 @@ export CLR_BLUE='\033[0;34m'
 export CLR_PURPLE='\033[0;35m'
 export CLR_CYAN='\033[0;36m'
 export CLR_WHITE='\033[0;37m'
+export CLR_WHITEi='\033[0;97m'
 
 export CHR_LAMBDA='\u03bb'
 
