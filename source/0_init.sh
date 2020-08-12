@@ -8,7 +8,7 @@ function is_macos {
 }
 
 function is_debian {
-    [[ -f "/etc/debian_version" ]] || [[ "$(grep -Ei 'debian|buntu|mint' /etc/*release)" ]] || return 1
+    [[ -f "/etc/debian_version" ]] || return 1
 }
 
 function is_ubuntu {

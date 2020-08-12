@@ -89,7 +89,7 @@ function dotfiles_link {
     shopt -u dotglob
     shopt -u globstar
 
-    if is_macos; then
+    if [ ! -e ~/.bash_profile ]; then
         ln -sf ~/.profile ~/.bash_profile
     fi
 
