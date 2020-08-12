@@ -10,19 +10,16 @@ function install_emacs_debian {
 
 function install_emacs_macos {
     log_info "Installing Emacs..."
-    if ! is_brew_formula_installed emacs-plus; then
-        brew tap d12frosted/emacs-plus
-        brew install emacs-plus --with-spacemacs-icon
-        log_info "Finished installing Emacs."
-    else
-        log_info "Emacs is already installed!"
-    fi
+    idempotent_brew_tap d12frosted/emacs-plus
+    idempotent_brew_install emacs-plus --with-spacemacs-icon
     log_info "Configuring Emacs..."
     if [ ! -e /Applications/Emacs.app ]; then
         ln -s /usr/local/opt/emacs-plus/Emacs.app /Applications
+        log_info "Linked application."
     fi
     if [ ! -d ~/.emacs.d/ ]; then
         git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d/
+        log_info "Cloned spacemacs."
     fi
     log_info "Finished configuring Emacs."
 }
@@ -43,6 +40,7 @@ function install_vim {
     if [ ! -d ~/.vim/bundle/Vundle.vim ]; then
         git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
         vim +PluginInstall +qall
+        log_info "Installed plugins."
     fi
     log_info "Finished configuring vim."
 }
@@ -55,4 +53,4 @@ install_vim
 # VSCode
 # TODO
 
-log_info "Finished installing editors.\n"
+log_header2 "Finished installing editors.\n"

@@ -26,4 +26,4 @@ function install_node {
 install_nvm
 install_node
 
-log_info "Finished installing JavaScript tools.\n"
+log_header2 "Finished installing JavaScript tools.\n"

@@ -57,4 +57,4 @@ install_jenv
 # configure_jenv
 install_lein
 
-log_info "Finished installing JVM tools.\n"
+log_header2 "Finished installing JVM tools.\n"

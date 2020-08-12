@@ -54,13 +54,29 @@ function is_brew_formula_installed {
     brew list "$1" > /dev/null 2>&1
 }
 
+function is_brew_tapped {
+    ! brew tap-info "$1" | grep "Not installed" > /dev/null 2>&1
+}
+
+function idempotent_brew_tap {
+    if ! is_brew_tapped "$1"; then
+        log_info "Tapping $1..."
+        brew tap "$1"
+        log_info "Tapped."
+    fi;
+}
+
 function idempotent_brew_install {
-    if ! is_brew_formula_installed "$1"; then
-        log_info "Installing Brew formula $1..."
-        brew install "$1"
-        log_info "Finished installing $1."
+    local formula="$1"
+    if [ "$1" == "cask" ]; then
+        formula="$2"
+    fi
+    if ! is_brew_formula_installed "$formula"; then
+        log_info "Installing Brew formula $formula..."
+        brew install $@
+        log_info "Finished installing $formula."
     else
-        log_info "Brew formula $1 is already installed!"
+        log_info "Brew formula $formula is already installed!"
     fi
 }
 
@@ -106,7 +122,7 @@ function install_bootstrap_tools_debian {
 function install_bootstrap_tools_macos {
     idempotent_brew_install wget
     idempotent_brew_install curl
-    is_brew_formula_installed git || brew install git --build_from_source
+    idempotent_brew_install git --build_from_source
     idempotent_brew_install openssl
     idempotent_brew_install jq
 }
@@ -123,4 +139,4 @@ function install_bootstrap_tools {
 update_package_manager
 install_bootstrap_tools
 
-log_info "Finished installing bootstrapping tools.\n"
+log_header2 "Finished installing bootstrapping tools.\n"
