@@ -2,6 +2,10 @@
 
 log_header2 "Installing miscellaneous tools..."
 
+# source code pro
+# brew tap homebrew/cask-fonts
+# brew cask install font-source-code-pro --fontdir=/Library/Fonts
+
 function install_htop_debian {
     apt_install htop
 }
