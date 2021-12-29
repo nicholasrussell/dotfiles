@@ -2,7 +2,7 @@
 
 log_header2 "Installing editors..."
 
-# Emacs (Spacemacs)
+# Emacs
 function install_emacs_debian {
     # TODO
     log_warn "Implement for debian"
@@ -10,18 +10,8 @@ function install_emacs_debian {
 
 function install_emacs_macos {
     log_info "Installing Emacs..."
-    idempotent_brew_tap d12frosted/emacs-plus
-    idempotent_brew_install emacs-plus --with-spacemacs-icon
-    log_info "Configuring Emacs..."
-    if [ ! -e /Applications/Emacs.app ]; then
-        ln -s /usr/local/opt/emacs-plus/Emacs.app /Applications
-        log_info "Linked application."
-    fi
-    if [ ! -d ~/.emacs.d/ ]; then
-        git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d/
-        log_info "Cloned spacemacs."
-    fi
-    log_info "Finished configuring Emacs."
+    idempotent_brew_install cask emacs
+    log_info "Finished installing Emacs."
 }
 
 function install_emacs {

@@ -1,3 +1,5 @@
+## Init
+
 if [ ! -n "${DOTFILES:+1}" ]; then
     export DOTFILES=~/.dotfiles
 fi
@@ -46,3 +48,11 @@ shopt -s globstar
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
+## Editor
+
+# Set global editor
+#export VISUAL="emacsclient -c"
+#export EDITOR="emacsclient -t"
+export VISUAL="vim"
+export EDITOR="vim"
+export ALTERNATE_EDITOR="vim"

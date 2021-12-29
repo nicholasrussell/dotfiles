@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-protected_branch='master'
 current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
 
-if [ $protected_branch = $current_branch ]
+if [[ $current_branch =~ ^(master|main)$ ]]
 then
     printf "Commit to branch ${CLR_RED}${protected_branch}${CLR_NONE}? [Y/n] "
     read -n 1 -r REPLY < /dev/tty

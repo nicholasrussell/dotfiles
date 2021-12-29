@@ -35,4 +35,4 @@ set number
 " Tabs to spaces; indent size = 2
 set tabstop=2
 set shiftwidth=2
-" set expandtab
+set expandtab

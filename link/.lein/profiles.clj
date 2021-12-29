@@ -1,1 +1,2 @@
-/Users/nrussell/.dotfiles/link/.lein/profiles.clj
+{:user {:plugins []
+        :dependencies []}}

@@ -14,7 +14,7 @@ function install_pyenv {
     fi
 }
 function install_python3 {
-    local version='3.8.5'
+    local version='3.10.1'
     log_info "Installing Python 3..."
     if ! pyenv versions | grep $version > /dev/null 2>&1; then
         pyenv install $version

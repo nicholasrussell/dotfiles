@@ -75,9 +75,10 @@ function idempotent_brew_install {
         log_info "Installing Brew formula $formula..."
         if [ "$1" == "cask" ]; then
             local temp_args=($@)
-            brew cask install ${temp_args[@]:1}
+            brew install --cask ${temp_args[@]:1}
+        else
+            brew install $@
         fi;
-        brew install $@
         log_info "Finished installing $formula."
     else
         log_info "Brew formula $formula is already installed!"
@@ -91,7 +92,7 @@ function update_package_manager_debian {
 
 function update_package_manager_macos {
     if ! which brew > /dev/null; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
     brew update > /dev/null 2>&1
 }
@@ -129,6 +130,8 @@ function install_bootstrap_tools_macos {
     idempotent_brew_install git --build_from_source
     idempotent_brew_install openssl
     idempotent_brew_install jq
+    idempotent_brew_install coreutils
+    idempotent_brew_install fd
 }
 
 function install_bootstrap_tools {

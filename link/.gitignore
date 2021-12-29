@@ -1,5 +1,7 @@
+# Mac OS
 .DS_Store
 
+# Emacs
 *~
 \#*\#
 /.emacs.desktop
@@ -7,9 +9,11 @@
 *.elc
 auto-save-list
 
-*.iml
+# IntelliJ Idea
 .idea/
+*.iml
 *.ipr
 *.iws
 
+# Gradle
 .gradle/

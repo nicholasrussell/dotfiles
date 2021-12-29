@@ -54,6 +54,8 @@ function set_titlebar {
 function git_colorize_master() {
     if [[ $PS1 == *"master"* ]]; then
         PS1=${PS1/master/"\[$CLR_RED\]master\[$CLR_NONE\]"}
+    elif [[ $PS1 == *"main"* ]]; then
+        PS1=${PS1/main/"\[$CLR_RED\]main\[$CLR_NONE\]"}
     fi
 }
 

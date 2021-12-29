@@ -15,8 +15,11 @@ function install_jenv {
 }
 
 function install_jdk_macos {
-    wget -q https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/jdk-14.0.2%2B12_openj9-0.21.0/OpenJDK14U-jdk_x64_mac_openj9_14.0.2_12_openj9-0.21.0.pkg
-    installer -pkg OpenJDK14U-jdk_x64_mac_openj9_14.0.2_12_openj9-0.21.0.pkg -target /
+    if [ ! -e /Library/Java/JavaVirtualMachines/ibm-semeru-open-17.jdk/ ]; then
+        wget -q https://github.com/ibmruntimes/semeru17-binaries/releases/download/jdk-17.0.1%2B12_openj9-0.29.1/ibm-semeru-open-jdk_x64_mac_17.0.1_12_openj9-0.29.1.pkg | sudo installer -pkg -target /
+        sudo installer -pkg ibm-semeru-open-jdk_x64_mac_17.0.1_12_openj9-0.29.1.pkg -target /
+        rm ibm-semeru-open-jdk_x64_mac_17.0.1_12_openj9-0.29.1.pkg
+    fi
 }
 
 function install_jdk {
@@ -29,12 +32,12 @@ function install_jdk {
 
 function configure_jenv {
     if is_macos; then
-        jenv add /Library/Java/JavaVirtualMachines/adoptopenjdk-14-openj9.jdk/Contents/Home/
+        jenv add /Library/Java/JavaVirtualMachines/ibm-semeru-open-17.jdk/Contents/Home/
     else
         log_warn "Implement for debian"
     fi
     jenv rehash
-    jenv global openjdk64-14.0.1
+    jenv global ibm64-17.0.1
 }
 
 function install_lein_debian {
@@ -53,8 +56,8 @@ function install_lein {
 }
 
 install_jenv
-# install_jdk
-# configure_jenv
+install_jdk
+configure_jenv
 install_lein
 
 log_header2 "Finished installing JVM tools.\n"

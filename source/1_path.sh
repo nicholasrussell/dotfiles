@@ -1,5 +1,5 @@
-export NVM_DIR="$HOME/.nvm"
 export JENV_PATH="$HOME/.jenv"
+export NVM_DIR="$HOME/.nvm"
 export PYENV_ROOT="$HOME/.pyenv"
 
 if [ -d "$HOME/bin" ]; then PATH="$HOME/bin:$PATH"; fi

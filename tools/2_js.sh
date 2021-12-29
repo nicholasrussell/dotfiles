@@ -5,7 +5,7 @@ log_header2 "Installing JavaScript tools..."
 function install_nvm {
     log_info "Installing nvm..."
     if ! command -v nvm > /dev/null 2>&1; then
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
         log_info "Finished installing nvm."
     else
         log_info "nvm is already installed!"
