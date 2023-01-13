@@ -42,10 +42,11 @@
 ;; Packages
 (require 'package)
 
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("melpa-stable" . "https://stable.melpa.org/packages/")
-			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
+(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
+(add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/"))
 
 (package-initialize)
 
@@ -163,9 +164,6 @@
 ;(use-package forge)
 
 ;; Modeline
-; First run: M-x all-the-icons-install-fonts
-(use-package all-the-icons)
-
 (use-package doom-modeline
   :init (doom-modeline-mode 1))
 
@@ -190,6 +188,8 @@
 ;; TODO hl-line
 
 ;; all-the-icons
+; First run: M-x all-the-icons-install-fonts
+(use-package all-the-icons)
 
 (setq show-paren-delay 0.1
       show-paren-highlight-openparen t
@@ -279,7 +279,12 @@
 
 (use-package clojure-mode
   :mode "\\.clj"
-  :hook (clojure-mode . lsp-deferred))
+  :hook ((clojure-mode . lsp-deferred)
+	 (clojure-refactor-mode . clojure-mode)))
+
+(use-package cider)
+
+(use-package clj-refactor)
 
 ;(use-package typescript-mode
 ;  :mode "\\.ts\\'"
