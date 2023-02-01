@@ -117,6 +117,7 @@ function install_bootstrap_tools_debian {
         apt-transport-https
         cmake
         libtool
+	libtool-bin
         jq
         unzip
         fontconfig

@@ -1,52 +1,60 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
 ;;; Util
+;; UTF-8
+(set-language-environment "UTF-8")
+; set-language-environment sets default-input-method too, so unset it
+(setq default-input-method nil)
+
 ;; Up GC limit
 (setq gc-cons-threshold (* 50 1024 1024))
 
+;; Display startup time
 (defun russell/display-startup-time ()
-  (message "Emacs loaded in %s with %d garbage collections."
-           (format "%.2f seconds"
-                   (float-time
-		    (time-subtract after-init-time before-init-time)))
+  (message "Emacs loaded in %s seconds with %d garbage collections."
+           (emacs-init-time "%.2f seconds")
            gcs-done))
-
 (add-hook 'emacs-startup-hook #'russell/display-startup-time)
 
+;; Additional ELisp functions
+(eval-when-compile (require 'subr-x))
+
+;; Directory to place additional Emacs config
 ; (add-to-list 'load-path (expand-file-name "init" user-emacs-directory))
-(defconst mac-os-p (eq system-type 'darwin))
 
+;; Environment constants
+(defconst russell/mac-os-p (eq system-type 'darwin))
+
+;; Early UI Customizations
 (setq inhibit-startup-message t)
-
 (setq ring-bell-function #'ignore
       visible-bell nil)
-
 (setq frame-title-format '("%b")
       icon-title-format frame-title-format)
-;; Don't resize the frames in steps
+;;; Don't resize the frames in steps
 (setq frame-resize-pixelwise t)
-;; But do not resize windows pixelwise, this can cause crashes in some cases
-;; when resizing too many windows at once or rapidly.
+;;; But do not resize windows pixelwise, this can cause crashes in some cases
+;;; when resizing too many windows at once or rapidly.
 (setq window-resize-pixelwise nil)
-
 (menu-bar-mode 0)
 (tool-bar-mode 0)
 (scroll-bar-mode 0)
-
 (setq use-dialog-box nil)
 (when (bound-and-true-p tooltip-mode)
   (tooltip-mode 0))
-
 (setq uniquify-buffer-name-style 'forward)
+(delete-selection-mode +1)
+(setq-default cursor-type 'bar)
 
 ;; Packages
 (require 'package)
 
-(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
+(add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/"))
+(when (version< emacs-version "28")
+  (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/")))
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
-(add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/"))
 
 (package-initialize)
 
@@ -85,26 +93,41 @@
   :init
   (savehist-mode))
 
+;(use-package ctrlf
+;  :init
+;  (ctrlf-mode +1))
+
 (use-package vertico
   :bind (:map vertico-map
          ("C-j" . vertico-next)
          ("C-k" . vertico-previous)
-         ("C-f" . vertico-exit)
          :map minibuffer-local-map
          ("M-h" . backward-kill-word))
   :config
   (setq vertico-cycle t)
+  (setq-default completion-in-region-function
+                (lambda (&rest args)
+                  (apply (if vertico-mode
+                             #'consult-completion-in-region
+                           #'completion--in-region)
+                         args)))
   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
   :init (vertico-mode))
+
+(use-package orderless
+  :init
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
+  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package consult
   :hook (completion-list-mode . consult-preview-at-point-mode)
   :bind
     ([remap apropos] . consult-apropos)
     ([remap bookmark-jump] . consult-bookmark)
-    ([remap evil-show-marks] . consult-mark)
-    ([remap evil-show-jumps] . +vertico/jump-list)
-    ([remap evil-show-registers] . consult-register)
     ([remap goto-line] . consult-goto-line)
     ([remap imenu] . consult-imenu)
     ([remap locate] . consult-locate)
@@ -115,14 +138,13 @@
     ([remap switch-to-buffer-other-window] . consult-buffer-other-window)
     ([remap switch-to-buffer-other-frame] . consult-buffer-other-frame)
     ([remap yank-pop] . consult-yank-pop)
-    ([remap persp-switch-to-buffer] . +vertico/switch-workspace-buffer)
-  :init
-  (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
-  (advice-add #'multi-occur :override #'consult-multi-occur)
+  ; :init
+  ; (advice-add #'completing-read-multiple :override #'consult-completing-read-multiple)
+  ; (advice-add #'multi-occur :override #'consult-multi-occur)
   :config
   ;; Hook into projectile
   (autoload 'projectile-project-root "projectile")
-  (setq consult-project-root-function #'projectile-project-root))
+  (setq consult-project-function (lambda (_) (projectile-project-root))))
 
 (use-package marginalia
   :requires (vertico)
@@ -138,9 +160,10 @@
   ([remap describ-key] . helpful-key))
 
 ;; Term
-;(use-package vterm
-;  :config
-;  (setq vterm-max-scrollback 10000))
+(use-package vterm
+  :config
+  (setq vterm-max-scrollback 10000)
+  (setq vterm-kill-buffer-on-exit t))
 
 ;; Projects
 (use-package projectile
@@ -185,12 +208,21 @@
 (add-hook 'text-mode-hook #'display-line-numbers-mode)
 (add-hook 'conf-mode-hook #'display-line-numbers-mode)
 
-;; TODO hl-line
+(use-package hl-line
+  :hook
+  ((prog-mode
+    text-mode
+    conf-mode) . hl-line-mode)
+  :custom-face
+  ; TODO move to theme
+  (hl-line ((t (:box (:line-width (-1 . -1) :color "#e0e0e0" :style nil) :background "#ffffff")))))
 
 ;; all-the-icons
 ; First run: M-x all-the-icons-install-fonts
 (use-package all-the-icons)
+(use-package all-the-icons-completion)
 
+;; Paren highlight
 (setq show-paren-delay 0.1
       show-paren-highlight-openparen t
       show-paren-when-point-inside-paren t
@@ -202,10 +234,16 @@
 
 (setq blink-matching-paren nil)
 
+;; Key Hints
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
   :config (setq which-key-idle-delay 0.3))
+
+;; Undo
+(use-package vundo
+  :bind
+  (("C-x C-u" . vundo)))
 
 ;; Minibuffer
 (setq enable-recursive-minibuffers t)
@@ -221,7 +259,8 @@
 (setq-default custom-file null-device)
 
 (use-package modus-themes
-  :init (load-theme 'modus-operandi 'no-confirm))
+  :init
+  (load-theme 'modus-operandi 'no-confirm))
 
 ;; Fonts
 (defun russell/set-fonts ()
@@ -249,31 +288,48 @@
   :commands (lsp lsp-deferred)
   :init
   (setq lsp-keymap-prefix "C-c l")
+  :bind
+  (("C-." . lsp-find-definition))
   :config
   (lsp-enable-which-key-integration t))
 
 (use-package dap-mode)
 
-(use-package company
-  :requires (lsp-mode)
-  :hook (lsp-mode . company-mode)
-  :bind
-  (:map company-active-map
-	("<tab>" . company-complete-selection))
-  (:map lsp-mode-map
-	("<tab>" . company-indent-or-complete-common))
-  :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
-(use-package company-box
-  :hook (company-mode . company-box-mode))
+;; (use-package company
+;;   :requires (lsp-mode)
+;;   :hook (lsp-mode . company-mode)
+;;   :bind
+;;   (:map company-active-map
+;; 	("<tab>" . company-complete-selection))
+;;   (:map lsp-mode-map
+;; 	("<tab>" . company-indent-or-complete-common))
+;;   :custom
+;;   (company-minimum-prefix-length 1)
+;;   (company-idle-delay 0.0))
+;; (use-package company-box
+;;   :hook (company-mode . company-box-mode))
 
 (use-package lsp-ui
   :requires (lsp-mode)
   :hook (lsp-mode . lsp-ui-mode))
 
+(use-package consult-lsp)
+
 (use-package lsp-treemacs
   :requires (lsp treemacs))
+
+;; (use-package eglot
+;;   :commands (eglot eglot-ensure)
+;;   :bind
+;;   (:map eglot-mode-map (([remap xref-find-apropos] . #'consult-eglot-symbols)))
+;;   :init
+;;   (setq eglot-sync-connect 1
+;;         eglot-connect-timeout 10
+;;         eglot-autoshutdown t
+;;         eglot-send-changes-idle-time 0.5
+;;         eglot-auto-display-help-buffer nil))
+
+;; (use-package consult-eglot)
 
 ;; Languages
 
@@ -282,7 +338,10 @@
   :hook ((clojure-mode . lsp-deferred)
 	 (clojure-refactor-mode . clojure-mode)))
 
-(use-package cider)
+(use-package cider
+  :custom
+  ((cider-repl-display-help-banner nil)
+   (cider-repl-pop-to-buffer-on-connect 'display-only)))
 
 (use-package clj-refactor)
 
@@ -309,7 +368,7 @@
   :commands dired-jump
   :custom ((dired-listing-switches "-alghov --group-directories-first --time-style=long-iso"))
   :config
-  (when mac-os-p
+  (when russell/mac-os-p
     (setq insert-directory-program "gls" dired-use-ls-dired t)))
 (use-package dired-single)
 (use-package all-the-icons-dired
