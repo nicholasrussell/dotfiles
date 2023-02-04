@@ -59,9 +59,27 @@
   (russell/set-fonts))
 
 ;; Visual undo
-(use-package vundo
-  :bind
-  (("C-x C-u" . vundo)))
+; (use-package vundo
+;  :bind
+;  (("C-x C-u" . vundo)))
+
+(use-package undo-tree
+  :init
+  (global-undo-tree-mode t)
+  :custom
+  (undo-tree-history-directory-alist `(("." . ,(expand-file-name "undo" user-emacs-directory))))
+  :config
+  (setq undo-tree-visualizer-diff t
+        undo-tree-auto-save-history t
+        undo-tree-enable-undo-in-region t
+        ;; Increase undo limits to avoid emacs prematurely truncating the undo
+        ;; history and corrupting the tree. This is larger than the undo-fu
+        ;; defaults because undo-tree trees consume exponentially more space,
+        ;; and then some when `undo-tree-enable-undo-in-region' is involved. See
+        ;; syl20bnr/spacemacs#12110
+        undo-limit 800000           ; 800kb (default is 160kb)
+        undo-strong-limit 12000000  ; 12mb  (default is 240kb)
+        undo-outer-limit 128000000)) ; 128mb (default is 24mb)
 
 ;; Minibuffer
 (setq enable-recursive-minibuffers t)
