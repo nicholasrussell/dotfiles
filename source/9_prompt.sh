@@ -52,10 +52,8 @@ function set_titlebar {
 
 # Ensures that master branch is differently colored
 function git_colorize_master() {
-    if [[ $PS1 == *"master"* ]]; then
-        PS1=${PS1/master/"\[$CLR_RED\]master\[$CLR_NONE\]"}
-    elif [[ $PS1 == *"main"* ]]; then
-        PS1=${PS1/main/"\[$CLR_RED\]main\[$CLR_NONE\]"}
+    if [[ "${__git_ps1_branch_name}" == "main" ]] || [[ "${__git_ps1_branch_name}" == "master" ]]; then
+        PS1=${PS1/"\${__git_ps1_branch_name}"/"\[$CLR_RED\]\${__git_ps1_branch_name}\[$CLR_NONE\]"}
     fi
 }
 
