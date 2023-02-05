@@ -88,6 +88,7 @@ function idempotent_brew_install {
 # Package Manager
 function update_package_manager_debian {
     apt_update
+    update_package_manager_macos
 }
 
 function update_package_manager_macos {
@@ -121,6 +122,19 @@ function install_bootstrap_tools_debian {
         jq
         unzip
         fontconfig
+        gcc
+        # below are for Python 3, move to tools?
+        zlib1g-dev
+        libbz2-dev
+        libreadline-dev
+        libsqlite3-dev
+        libncursesw5-dev
+        xz-utils
+        tk-dev
+        libxml2-dev
+        libxmlsec1-dev
+        libffi-dev
+        liblzma-dev
     )
     dotfiles_apt_tools=($(setdiff "${dotfiles_apt_tools[*]}" "$(dpkg --get-selections | grep -v deinstall | awk '{print $1}' | sed 's/:.*//')"))
     for dotfiles_apt_tool in "${dotfiles_apt_tools[@]}"; do

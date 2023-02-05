@@ -4,6 +4,11 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1))
 
+;; (use-package mini-modeline
+;;   :after doom-modeline
+;;   :config
+;;   (mini-modeline-mode t))
+
 ;; Line Numbers
 (column-number-mode)
 (setq-default display-line-numbers-width 3)
@@ -36,8 +41,10 @@
 
 ;; all-the-icons
 ; First run: M-x all-the-icons-install-fonts
-(use-package all-the-icons)
-(use-package all-the-icons-completion)
+(use-package all-the-icons
+  :if (display-graphic-p))
+(use-package all-the-icons-completion
+  :if (display-graphic-p))
 
 ;;; Theme
 (setq custom-theme-directory (expand-file-name "themes" user-emacs-directory))

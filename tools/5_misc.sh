@@ -57,11 +57,9 @@ function install_ripgrep {
     fi
 }
 
-install_fonts
-install_htop
-install_docker
-install_kcat
-install_ripgrep
+function install_babashka {
+    idempotent_brew_install borkdude/brew/babashka
+}
 
 if is_macos; then
     idempotent_brew_install coreutils
@@ -69,5 +67,12 @@ if is_macos; then
     idempotent_brew_install cmake
     idempotent_brew_install libvterm
 fi
+
+install_fonts
+install_htop
+install_docker
+install_kcat
+install_ripgrep
+install_babashka
 
 log_header2 "Finished installing miscellaneous tools.\n"
