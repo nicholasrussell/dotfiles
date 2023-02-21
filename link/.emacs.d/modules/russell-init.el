@@ -5,9 +5,6 @@
 ; set-language-environment sets default-input-method too, so unset it
 (setq default-input-method nil)
 
-;; Up GC limit
-(setq gc-cons-threshold (* 50 1024 1024))
-
 ;; Display startup time
 (defun russell/display-startup-time ()
   (message "Emacs loaded in %s seconds with %d garbage collections."

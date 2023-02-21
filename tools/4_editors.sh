@@ -4,7 +4,7 @@ log_header2 "Installing editors..."
 
 # Emacs
 function install_emacs_debian {
-    sudo snap install emacs --classic
+    sudo snap install emacs --edge --classic
     # Install Clojure LSP
     sudo bash < <(curl -s https://raw.githubusercontent.com/clojure-lsp/clojure-lsp/master/install)
 }

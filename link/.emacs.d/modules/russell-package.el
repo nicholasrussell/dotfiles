@@ -16,6 +16,11 @@
                           ("melpa"  . 0)
                           ("org" . 0)))
 
+(package-initialize)
+
+(require 'use-package)
+(setq use-package-always-ensure t)
+
 (use-package quelpa
   :config
   (setq quelpa-upgrade-interval 7)
@@ -23,8 +28,6 @@
   (setq quelpa-checkout-melpa-p nil)
   :hook
   (after-init-hook . quelpa-upgrade-all-maybe))
-
-(package-initialize)
 
 (if package-archive-contents
   ;; Check if packages are stale (older than n days)
@@ -46,12 +49,6 @@
   (progn
     (message "russell/package: Package archives empty, refreshing")
     (package-refresh-contents)))
-
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-
-(require 'use-package)
-(setq use-package-always-ensure t)
 
 (provide 'russell-package)
 

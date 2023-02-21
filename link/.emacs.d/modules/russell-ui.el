@@ -4,8 +4,8 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1))
 
-;; (use-package mini-modeline
-;;   :after doom-modeline
+(use-package mini-modeline
+   :after doom-modeline)
 ;;   :config
 ;;   (mini-modeline-mode t))
 
