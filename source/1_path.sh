@@ -1,3 +1,4 @@
+export CARGO_PATH="$HOME/.cargo"
 export JENV_PATH="$HOME/.jenv"
 export NVM_DIR="$HOME/.nvm"
 export PYENV_ROOT="$HOME/.pyenv"
