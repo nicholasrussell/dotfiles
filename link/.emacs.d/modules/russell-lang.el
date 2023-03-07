@@ -31,7 +31,9 @@
 
 (use-package lsp-ui
   :requires (lsp-mode)
-  :hook (lsp-mode . lsp-ui-mode))
+  :hook (lsp-mode . lsp-ui-mode)
+  :init
+  (setq lsp-headerline-breadcrumb-enable nil))
 
 (use-package consult-lsp)
 
@@ -91,6 +93,21 @@
 ;  (setq typescript-indent-level 2)
 ;  (require 'dap-node)
 ;  (dap-node-setup))
+
+(use-package rust-mode
+  :mode "\\.rs"
+  :hook ((rust-mode . lsp-deferred)
+         (rust-mode . display-line-numbers-mode)))
+
+(use-package yaml-mode
+  :mode "\\.ya?ml")
+
+(use-package yaml-pro
+  :hook
+  ((yaml-mode) . yaml-pro-ts-mode))
+
+(use-package hcl-mode
+  :mode "\\.\\(hcl\\|tf\\)")
 
 (use-package parinfer-rust-mode
     :hook ((emacs-lisp-mode

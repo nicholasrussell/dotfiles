@@ -7,4 +7,5 @@ else
   alias ls="ls --color=auto --group-directories-first --time-style=long-iso -hv"
 fi
 
+alias dotenv="set -a && source .env && set +a"
 alias kill-emacs="emacsclient -e \"(kill-emacs)\""

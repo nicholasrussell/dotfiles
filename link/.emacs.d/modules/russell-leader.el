@@ -1,9 +1,11 @@
 ;;; russell-leader.el -*- lexical-binding: t; -*-
 
 (global-unset-key (kbd "C-SPC"))
+;(global-unset-key (kbd "C-/"))
 (use-package general
   :config
   (general-define-key "<escape>" 'keyboard-escape-quit)
+;  (general-define-key "C-/" 'comment-or-uncomment-region)
   (general-create-definer russell/global-leader
     :prefix "C-SPC")
   (general-create-definer russell/toggle-leader

@@ -2,7 +2,8 @@
 
 ;; Modeline
 (use-package doom-modeline
-  :init (doom-modeline-mode 1))
+  :init
+  (doom-modeline-mode 1))
 
 (use-package mini-modeline
    :after doom-modeline)
@@ -13,6 +14,7 @@
 (column-number-mode)
 (setq-default display-line-numbers-width 3)
 (setq-default display-line-numbers-widen t)
+(setq-default display-line-numbers-type 'relative)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'text-mode-hook #'display-line-numbers-mode)
 (add-hook 'conf-mode-hook #'display-line-numbers-mode)
@@ -114,6 +116,11 @@
 (use-package emojify
   :hook (after-init . global-emojify-mode)
   :custom ((emojify-emoji-styles '(unicode))))
+
+;; Opacity
+(defun russell/alpha (n)
+  (interactive "nAlpha: ")
+  (set-frame-parameter nil 'alpha-background n))
 
 (provide 'russell-ui)
 

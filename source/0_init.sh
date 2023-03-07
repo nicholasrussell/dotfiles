@@ -23,6 +23,13 @@ function get_os {
     done
 }
 
+function in_emacs {
+    [[ -v INSIDE_EMACS ]] || return 1
+}
+
+## Theme
+test -r ~/.dir_colors && eval $(dircolors ~/.dir_colors)
+
 ## History
 
 # don't put duplicate lines or lines starting with space in the history.
@@ -51,6 +58,6 @@ shopt -s globstar
 ## Editor
 
 # Set global editor
-export VISUAL="emacsclient -c -a emacs"
+export VISUAL="emacsclient -c -a nvim"
 export EDITOR="emacsclient -t"
-export ALTERNATE_EDITOR="vim"
+export ALTERNATE_EDITOR="nvim"

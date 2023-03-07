@@ -5,6 +5,13 @@
 ; set-language-environment sets default-input-method too, so unset it
 (setq default-input-method nil)
 
+;; Environment constants
+(defconst russell/mac-os-p (eq system-type 'darwin))
+(defconst russell/linux-p (eq system-type 'gnu/linux))
+(defconst russell/bsd-p (or russell/mac-os-p (eq system-type 'berkeley-unix)))
+(defconst russell/windows-p (memq system-type '(cygwin windows-nt ms-dos)))
+(defconst russell/terminal-p (not window-system))
+
 ;; Display startup time
 (defun russell/display-startup-time ()
   (message "Emacs loaded in %s seconds with %d garbage collections."
@@ -28,11 +35,10 @@
 ;; Additional ELisp functions
 (eval-when-compile (require 'subr-x))
 
-;; Environment constants
-(defconst russell/mac-os-p (eq system-type 'darwin))
-(defconst russell/linux-p (eq system-type 'gnu/linux))
-(defconst russell/bsd-p (or russell/mac-os-p (eq system-type 'berkeley-unix)))
-(defconst russell/windows-p (memq system-type '(cygwin windows-nt ms-dos)))
+;; Backups
+(setq backup-by-copying t)
+(setq backup-directory-alist `(("." . "~/.emacs-saves")))
+(setq auto-save-file-name-transforms `((".*" "~/.emacs-saves" t)))
 
 (provide 'russell-init)
 

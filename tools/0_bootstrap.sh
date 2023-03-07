@@ -123,6 +123,9 @@ function install_bootstrap_tools_debian {
         unzip
         fontconfig
         gcc
+        # Rust
+        lld
+        clang
         # below are for Python 3, move to tools?
         zlib1g-dev
         libbz2-dev
@@ -149,6 +152,8 @@ function install_bootstrap_tools_macos {
     idempotent_brew_install git --build_from_source
     idempotent_brew_install openssl
     idempotent_brew_install jq
+    # Rust
+    idempotent_brew_install michaeleisel/zld/zld
 }
 
 function install_bootstrap_tools {

@@ -1,13 +1,14 @@
 [Unit]
-Description=Emacs
+Description=Emacs text editor
 Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
 
 [Service]
-Type=forking
-ExecStart=/snap/bin/emacs --daemon
-ExecStop=/snap/bin/emacsclient --eval "(kill-emacs)"
-Environment=SSH_AUTH_SOCK=%t/keyring/ssh
+Type=notify
+ExecStart=/snap/emacs/current/usr/bin/emacs --fg-daemon
+ExecStop=/snap/emacs/current/usr/bin/emacs --eval "(kill-emacs)"
+# Environment=SSH_AUTH_SOCK=%t/keyring/ssh
 Restart=on-failure
+SuccessExitStatus=15
 
 [Install]
 WantedBy=default.target

@@ -21,6 +21,10 @@
   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
   :init (vertico-mode))
 
+;; (use-package vertico-posframe
+;;   :init
+;;   (vertico-posframe-mode 1))
+
 (use-package orderless
   :init
   ;; Configure a custom style dispatcher (see the Consult wiki)
