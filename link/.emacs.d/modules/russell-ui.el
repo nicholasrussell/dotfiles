@@ -36,10 +36,16 @@
   :hook
   ((prog-mode
     text-mode
-    conf-mode) . hl-line-mode)
-  :custom-face
-  ; TODO move to theme
-  (hl-line ((t (:box (:line-width (-1 . -1) :color "#e0e0e0" :style nil) :background "#ffffff")))))
+    conf-mode)
+   . hl-line-mode))
+
+;; Pulse line for cursor point focus
+(use-package pulsar
+  :init
+  (pulsar-global-mode 1)
+  :config
+  (setq pulsar-delay 0.025)
+  (setq pulsar-iterations 10))
 
 ;; all-the-icons
 ; First run: M-x all-the-icons-install-fonts
@@ -55,11 +61,34 @@
 
 (use-package modus-themes
   :init
-  (load-theme 'modus-operandi 'no-confirm))
+  (load-theme 'modus-operandi 'no-confirm)
+  :custom-face
+  (hl-line ((t (:box (:line-width (-1 . -1) :color "#e0e0e0" :style nil) :background "#ffffff")))))
+
+;; (use-package doom-themes
+;;   :init
+;;   (load-theme 'doom-nord 'no-confirm))
+
+;; (use-package lambda-themes
+;;   :straight (:type git :host github :repo "lambda-emacs/lambda-themes")
+;;   :config
+;;   (load-theme 'lambda-dark-faded 'no-confirm))
+;; (quelpa '(lambda-themes :fetcher git :url "https://github.com/lambda-emacs/lambda-themes.git"))
+;; (setq lambda-themes-set-italic-comments nil)
+;; (setq lambda-themes-set-italic-keywords nil)
+;; (setq lambda-themes-set-variable-pitch nil)
+
+(use-package solaire-mode
+  :init
+  (solaire-global-mode 1))
 
 ;; Fonts
 (defun russell/set-fonts ()
-  (set-face-attribute 'default nil :font "Source Code Pro" :height 130 :weight 'normal :width 'normal))
+  (interactive)
+  (let* ((attrs (frame-monitor-attributes))
+         (geo (cadr attrs))
+         (width-px (cadddr geo)))
+    (set-face-attribute 'default nil :font "Source Code Pro" :height (if (> 2000 width-px) 130 180) :weight 'normal :width 'normal)))
 (if (daemonp)
   (add-hook 'server-after-make-frame-hook
         (lambda ()
@@ -68,10 +97,6 @@
   (russell/set-fonts))
 
 ;; Visual undo
-; (use-package vundo
-;  :bind
-;  (("C-x C-u" . vundo)))
-
 (use-package undo-tree
   :init
   (global-undo-tree-mode t)

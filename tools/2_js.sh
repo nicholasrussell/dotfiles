@@ -26,6 +26,12 @@ function install_node {
     fi
 }
 
+function install_lsp {
+    log_info "Installing Typescript LSP..."
+    npm install -g typescript typescript-language-server
+    log_info "Finished installing Typescript LSP."
+}
+
 install_nvm
 install_node
 

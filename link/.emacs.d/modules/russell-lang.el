@@ -14,6 +14,7 @@
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :init
+  (global-unset-key (kbd "C-."))
   (setq lsp-keymap-prefix "C-c l")
   :bind
   (("C-." . lsp-find-definition))
@@ -59,7 +60,7 @@
     c-sharp-mode
     clojure-mode
     java-mode
-    javascript-mode
+    js-mode
     jsdoc-mode
     json-mode
     markdown-mode
@@ -86,13 +87,22 @@
 
 (use-package clj-refactor)
 
-;(use-package typescript-mode
-;  :mode "\\.ts\\'"
-;  :hook (typescript-mode . lsp-deferred)
-;  :config
-;  (setq typescript-indent-level 2)
-;  (require 'dap-node)
-;  (dap-node-setup))
+(use-package typescript-mode
+ :after tree-sitter
+ :hook ((js-mode typescript-mode) . lsp-deferred)
+ :config
+ (define-derived-mode typescript-react-mode typescript-mode "TypeScript TSX")
+ (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-react-mode))
+ (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-react-mode . tsx))
+
+ (define-derived-mode js-react-mode js-mode "JavaScript JSX")
+ (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js-react-mode))
+ (add-to-list 'tree-sitter-major-mode-language-alist '(javascript-react-mode . jsx))
+
+ (setq typescript-indent-level 2)
+ (setq js-indent-level 2))
+ ; (require 'dap-node)
+ ; (dap-node-setup))
 
 (use-package rust-mode
   :mode "\\.rs"
