@@ -19,11 +19,26 @@
                            #'completion--in-region)
                          args)))
   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
-  :init (vertico-mode))
+  (with-eval-after-load 'evil
+    (define-key vertico-map (kbd "C-j") 'vertico-next)
+    (define-key vertico-map (kbd "C-k") 'vertico-previous)
+    (define-key vertico-map (kbd "M-h") 'vertico-directory-up))
+  :init
+  (require 'vertico-directory)
+  (vertico-mode)
+  :custom
+  (vertico-cycle t))
 
 ;; (use-package vertico-posframe
 ;;   :init
 ;;   (vertico-posframe-mode 1))
+
+(use-package marginalia
+  :requires (vertico)
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode))
 
 (use-package orderless
   :init
@@ -32,7 +47,7 @@
   ;;       orderless-component-separator #'orderless-escapable-split-on-space)
   (setq completion-styles '(orderless basic)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+        completion-category-overrides '((file (styles . (partial-completion))))))
 
 (use-package consult
   :hook (completion-list-mode . consult-preview-at-point-mode)
@@ -57,12 +72,23 @@
   (autoload 'projectile-project-root "projectile")
   (setq consult-project-function (lambda (_) (projectile-project-root))))
 
-(use-package marginalia
-  :requires (vertico)
+(use-package corfu
   :custom
-  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  (corfu-auto t)
   :init
-  (marginalia-mode))
+  (global-corfu-mode))
+
+(use-package corfu-terminal
+  :init
+  (unless (display-graphic-p)
+    (corfu-terminal-mode +1)))
+
+(use-package cape
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent))
 
 (use-package helpful
   :bind

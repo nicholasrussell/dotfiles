@@ -78,23 +78,26 @@
 ;; (setq lambda-themes-set-italic-keywords nil)
 ;; (setq lambda-themes-set-variable-pitch nil)
 
-(use-package solaire-mode
-  :init
-  (solaire-global-mode 1))
+;; (use-package solaire-mode
+;;  :init
+;;  (solaire-global-mode 1))
 
 ;; Fonts
-(defun russell/set-fonts ()
+(defun russell/set-fonts (&optional frame)
   (interactive)
-  (let* ((attrs (frame-monitor-attributes))
-         (geo (cadr attrs))
-         (width-px (cadddr geo)))
-    (set-face-attribute 'default nil :font "Source Code Pro" :height (if (> 2000 width-px) 130 180) :weight 'normal :width 'normal)))
+  (let* ((attrs (frame-monitor-attributes frame))
+         (geo (alist-get 'geometry attrs))
+         (mm-size (alist-get 'mm-size attrs))
+         (px-x (caddr geo))
+         (cm-x (/ (car mm-size) 10.0))
+         (ppcm (/ px-x cm-x)))
+    (set-face-attribute 'default frame :font "Source Code Pro" :height (if (< ppcm 40) 130 180) :weight 'normal :width 'normal)))
 (if (daemonp)
   (add-hook 'server-after-make-frame-hook
         (lambda ()
             (setq doom-modeline-icon t)
-            (russell/set-fonts)))
-  (russell/set-fonts))
+            (russell/set-fonts (selected-frame))))
+  (russell/set-fonts (selected-frame)))
 
 ;; Visual undo
 (use-package undo-tree

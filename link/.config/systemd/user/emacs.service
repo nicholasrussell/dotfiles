@@ -3,9 +3,9 @@ Description=Emacs text editor
 Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
 
 [Service]
-Type=notify
-ExecStart=/snap/emacs/current/usr/bin/emacs --fg-daemon
-ExecStop=/snap/emacs/current/usr/bin/emacs --eval "(kill-emacs)"
+Type=simple
+ExecStart=/usr/local/bin/emacs --fg-daemon
+ExecStop=/usr/local/bin/emacs --eval "(kill-emacs)"
 # Environment=SSH_AUTH_SOCK=%t/keyring/ssh
 Restart=on-failure
 SuccessExitStatus=15

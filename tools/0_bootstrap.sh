@@ -123,6 +123,19 @@ function install_bootstrap_tools_debian {
         unzip
         fontconfig
         gcc
+        # Emacs
+        libgccjit0
+        libgccjit-10-dev
+        texinfo
+        libxpm-dev
+        libjpeg-dev
+        libgif-dev
+        libungif-bin
+        libtiff-dev
+        libtree-sitter-dev
+        libjansson4
+        libjansson-dev
+        libacl1-dev
         # Rust
         lld
         clang

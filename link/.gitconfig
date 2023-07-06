@@ -2,6 +2,7 @@
 	attributes = ~/.gitattributes
 	autocrlf = input
 	excludesfile = ~/.gitignore
+	eol = lf
 	# editor = emacs
 	# whitespace = blank-at-eol,blank-at-eof,space-before-tab,tab-in-indent,trailing-space,fix
 
