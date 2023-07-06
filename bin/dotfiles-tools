@@ -4,9 +4,8 @@
 export DOTFILES=~/.dotfiles
 source $DOTFILES/util/dotfiles.sh
 
-## Run dotfiles
+## Run dotfiles tools
 prompt_sudo
-dotfiles_main
+dotfiles_tools
 
 log_success "Done!"
-
