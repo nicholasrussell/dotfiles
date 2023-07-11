@@ -17,8 +17,12 @@ function is_ubuntu {
     [[ "$(cat /etc/issue 2> /dev/null)" =~ Ubuntu ]] || return 1
 }
 
+function is_guix {
+    [[ -f "/etc/os-release" && "$(cat /etc/os-release 2> /dev/null)" =~ Guix ]] || return 1
+}
+
 function get_os {
-    for os in macos ubuntu; do
+    for os in macos ubuntu guix; do
         is_$os; [[ $? == ${1:-0} ]] && echo $os
     done
 }

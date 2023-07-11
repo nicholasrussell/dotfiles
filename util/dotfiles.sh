@@ -14,11 +14,31 @@ function dotfiles_link {
     fi
     mkdir -p $DOTFILES/backup/link
 
+    source $DOTFILES/source/0_init.sh
+
     log_header1 "Linking files..."
     shopt -s dotglob
     shopt -s globstar
+    shopt -s nullglob
+
+    declare -A link_exclude
+    local library_list=($DOTFILES/link/Library/**/*)
+    local empty_list=()
+    link_exclude[guix]=library_list[@]
+    link_exclude[ubuntu]=library_list[@]
+    link_exclude[macos]=empty_list[@]
+
     local dotfiles_link
+    local os=$(get_os)
     for dotfiles_link in $DOTFILES/link/**/*; do
+        let skip=false
+        for exclude in "${!link_exclude[$os]}"; do
+            if [[ "$exclude" == "$dotfiles_link" ]]; then
+                log_info "Skipping ${dotfiles_link}..."
+                skip=true
+            fi
+        done
+        if [ "$skip" = true ]; then continue; fi
         if [ -f $dotfiles_link ]; then
             dotfiles_link=$(echo $dotfiles_link | sed -e 's,'"$DOTFILES"/link/',,')
             if [ -e ~/${dotfiles_link} ]; then
@@ -35,6 +55,7 @@ function dotfiles_link {
     done
     shopt -u dotglob
     shopt -u globstar
+    shopt -u nullglob
 
     log_success "Finished linking files\n"
 }
