@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+# From https://git.savannah.gnu.org/cgit/guix.git/plain/etc/guix-install.sh
+
+GNU_URL="https://ftp.gnu.org/gnu/guix"
+
+guix_get_latest_ver() {
+    # Scan GNU archive and save list of binaries
+    local -a bin_ver_ls
+
+    # Filter only version and architecture
+    bin_ver_ls=("$(wget "$GNU_URL" --no-verbose -O- \
+        | sed -n -e 's/.*guix-binary-\([0-9.]*[a-z0-9]*\)\..*.tar.xz.*/\1/p' \
+        | sort -Vu)")
+
+    LATEST_VERSION="$(echo "${bin_ver_ls[0]}" \
+                       | grep -oE "([0-9]{1,2}\.){2}[0-9]{1,2}[a-z0-9]*" \
+                       | tail -n1)"
+}
+
+guix_gpg_keyring() {
+    declare -A GPG_SIGNING_KEYS
+    GPG_SIGNING_KEYS[15145]=3CE464558A84FDC69DB40CFB090B11993D9AEBB5 # ludo
+    GPG_SIGNING_KEYS[127547]=27D586A4F8900854329FF09F1260E46482E63562 # maxim
+
+    for user_id in "${!GPG_SIGNING_KEYS[@]}"; do
+        gpg_key_id=${GPG_SIGNING_KEYS[$user_id]}
+        if gpg --dry-run --list-keys "$gpg_key_id" >/dev/null 2>&1; then
+            continue
+        fi
+        wget "https://sv.gnu.org/people/viewgpg.php?user_id=$user_id" --timeout=30 --no-verbose -O- | gpg --import -
+    done
+}
+
+guix_download_and_verify() {
+    local wget_args=("--no-verbose" "--show-progress")
+    local file_name="guix-system-install-${LATEST_VERSION}.x86_64-linux"
+    local dl_path="$1"
+
+    wget "${wget_args[@]}" -P "$dl_path" "${GNU_URL}/${file_name}.iso" "${GNU_URL}/${file_name}.iso.sig"
+
+    pushd "${dl_path}" >/dev/null
+    if gpg --verify "${file_name}.iso.sig" >/dev/null 2>&1; then
+        popd >/dev/null
+        BIN_PATH="${dl_path}/${file_name}.iso"
+    else
+        echo "Could not verify signature."
+        rm -rf "${file_name}.iso*"
+        exit 1
+    fi
+}
+
+tmp_path="$(mktemp -t -d guix.XXXXXX)"
+guix_get_latest_ver
+guix_gpg_keyring
+guix_download_and_verify $tmp_path
+echo "$BIN_PATH"
+
