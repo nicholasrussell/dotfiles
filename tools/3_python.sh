@@ -3,9 +3,16 @@
 log_header2 "Installing Python tools..."
 
 function install_pyenv_debian {
+    log_info "Installing pyenv..."
     if [ ! -d ~/.pyenv ]; then
         git clone https://github.com/pyenv/pyenv.git ~/.pyenv
-        source ~/.bashrc
+        dotfiles_source
+        log_info "Finished installing pyenv."
+    elif [[ -v DOTFILES_TOOLS_FORCE ]]; then
+        cd ~/.pyenv && git pull -q && cd - > /dev/null
+        log_info "Finished updating pyenv."
+    else
+        log_info "pyenv already installed!"
     fi
 }
 
@@ -19,8 +26,8 @@ function install_pyenv {
 function install_python3 {
     local version='3.11.1'
     log_info "Installing Python 3..."
-    if ! pyenv versions | grep $version > /dev/null 2>&1; then
-        pyenv install $version
+    if ! pyenv versions | grep $version > /dev/null 2>&1 || [[ -v DOTFILES_TOOLS_FORCE ]]; then
+        pyenv install -f $version
         pyenv global $version
         log_info "Finished installing Python 3."
     else
@@ -31,4 +38,4 @@ function install_python3 {
 install_pyenv
 install_python3
 
-log_header2 "Finished installing Python tools."
+log_header2 "Finished installing Python tools.\n"

@@ -46,6 +46,15 @@ function apt_install {
     fi
 }
 
+function apt_update_package {
+    local pkg
+    pkg="$1"
+    sudo apt-get -qq install --only-upgrade "$package" > /dev/null 2>&1
+    if [ $? -ne 0]; then
+        log_error "Failed to upgrade apt package $pkg"
+    fi
+}
+
 function apt_update {
     sudo apt-get -qq update
 }
@@ -88,7 +97,6 @@ function idempotent_brew_install {
 # Package Manager
 function update_package_manager_debian {
     apt_update
-    update_package_manager_macos
 }
 
 function update_package_manager_macos {
@@ -107,7 +115,27 @@ function update_package_manager {
     fi
 }
 
+function installed_apt_packages {
+    local -n arr=$1
+    arr=($(dpkg --get-selections | grep -v deinstall | awk '{print $1}' | sed 's/:.*//'))
+}
+
+function install_apt_packages {
+    local apt_packages apt_package installed
+    apt_packages=("$@")
+    #if [[ ! -v DOTFILES_TOOLS_FORCE ]]; then
+        installed_apt_packages installed
+        apt_packages=($(setdiff "${apt_packages[*]}" "${installed[*]}"))
+    #fi
+    for apt_package in "${apt_packages[@]}"; do
+        log_info "Installing apt package $apt_package..."
+        apt_install "$dotfiles_apt_tool"
+        log_info "Finished installing apt package $apt_package."
+    done
+}
+
 function install_bootstrap_tools_debian {
+    local dotfiles_apt_tools
     dotfiles_apt_tools=(
         wget
         curl
@@ -130,7 +158,7 @@ function install_bootstrap_tools_debian {
         libxpm-dev
         libjpeg-dev
         libgif-dev
-        libungif-bin
+        giflib-tools # instead of libungif-bin
         libtiff-dev
         libtree-sitter-dev
         libjansson4
@@ -152,11 +180,7 @@ function install_bootstrap_tools_debian {
         libffi-dev
         liblzma-dev
     )
-    dotfiles_apt_tools=($(setdiff "${dotfiles_apt_tools[*]}" "$(dpkg --get-selections | grep -v deinstall | awk '{print $1}' | sed 's/:.*//')"))
-    for dotfiles_apt_tool in "${dotfiles_apt_tools[@]}"; do
-        apt_install "$dotfiles_apt_tool"
-    done
-    unset dotfiles_apt_tool dotfiles_apt_tools
+    install_apt_packages "${dotfiles_apt_tools[@]}"
 }
 
 function install_bootstrap_tools_macos {
@@ -165,8 +189,6 @@ function install_bootstrap_tools_macos {
     idempotent_brew_install git --build_from_source
     idempotent_brew_install openssl
     idempotent_brew_install jq
-    # Rust
-    idempotent_brew_install michaeleisel/zld/zld
 }
 
 function install_bootstrap_tools {

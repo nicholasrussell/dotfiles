@@ -1,139 +1,104 @@
 ;;; russell-lang.el -*- lexical-binding: t; -*-
 
-;; Org
-(use-package org
-  :config
-  (setq org-ellipsis " »" org-hide-emphasis-markers t))
-(use-package org-bullets
-  :requires (org)
-  :hook (org-mode . org-bullets-mode)
-  :custom
-  (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+;;; Org
+;; Return or left-click with mouse follows link
+(customize-set-variable 'org-return-follows-link t)
+(customize-set-variable 'org-mouse-1-follows-link t)
+;; Display links as the description provided
+(customize-set-variable 'org-link-descriptive t)
+;; Visually indent org-mode files to a given header level
+(add-hook 'org-mode-hook #'org-indent-mode)
+(add-hook 'org-mode-hook #'org-appear-mode)
+;; Hide markup markers
+(customize-set-variable 'org-hide-emphasis-markers t)
+(require 'org-appear)
+(add-hook 'org-mode-hook 'org-appear-mode)
 
-;; Language Server
-;; (use-package lsp-mode
-;;   :commands (lsp lsp-deferred)
-;;   :init
-;;   (global-unset-key (kbd "C-."))
-;;   (setq lsp-keymap-prefix "C-c l")
-;;   :bind
-;;   (("C-." . lsp-find-definition))
-;;   :config
-;;   (lsp-enable-which-key-integration t))
+;;; Eglot
+(customize-set-variable 'eglot-autoshutdown t)
+(require 'consult-eglot)
+(add-hook 'eglot-mode (lambda () (keymap-local-set "<remap> <xref-find-apropos>" #'consult-eglot-symbols)))
 
-;; (use-package lsp-java
-;;   :hook ((java-mode . lsp-deferred)))
+;;; Tree Sitter
+(require 'treesit-auto)
+(setq treesit-auto-install t)
+(global-treesit-auto-mode)
+(treesit-auto-install-all)
+(treesit-auto-add-to-auto-mode-alist)
 
-;; (use-package dap-mode
-;;   :config
-;;   (dap-auto-configure-mode)
-;;   (require 'dap-lldb)
-;;   (require 'dap-gdb-lldb)
-;;   (dap-gdb-lldb-setup))
+;;; Languages
+;; Clojure
+(require 'clojure-mode)
+(with-eval-after-load "clojure-mode"
+  (require 'cider)
+  (customize-set-variable 'cider-repl-display-help-banner nil)
+  (customize-set-variable 'cider-repl-pop-to-buffer-on-connect 'display-only)
+  (require 'clj-refactor)
+  (add-hook 'clojure-mode-hook
+            (lambda ()
+              (clj-refactor-mode 1)
+              (cljr-add-keybindings-with-prefix "C-c r")))
+  (with-eval-after-load "flycheck"
+    (require 'flycheck-clojure)
+    (flycheck-clojure-setup)))
 
-;; TODO Update for Emacs 30
-;; (use-package dap-java)
+;; JavaScript / TypeScript
+(require 'typescript-mode)
+(define-derived-mode typescript-react-mode typescript-mode "TypeScript TSX")
+(add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-react-mode))
+(define-derived-mode js-react-mode js-mode "JavaScript JSX")
+(add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js-react-mode))
+(setq-default typescript-indent-level 2)
+(setq-default js-indent-level 2)
+;(require 'dap-node)
+;(dap-node-setup)
 
-;; (use-package lsp-ui
-;;   :requires (lsp-mode)
-;;   :hook (lsp-mode . lsp-ui-mode)
-;;   :init
-;;   (setq lsp-headerline-breadcrumb-enable nil))
-
-;; (use-package consult-lsp)
-
-;; (use-package lsp-treemacs
-;;   :requires (lsp treemacs))
-
-(use-package eglot
-  :commands (eglot lsp-deferred)
-  :bind
-  (:map eglot-mode-map (([remap xref-find-apropos] . #'consult-eglot-symbols)
-                        ("C-." . #'eglot-find-declaration)))
-  :init
-  (setq eglot-autoshutdown t))
-
-(use-package consult-eglot)
-
-(use-package tree-sitter
-  :hook
-  ((bash-mode
-    c-sharp-mode
-    clojure-mode
-    java-mode
-    js-mode
-    jsdoc-mode
-    json-mode
-    markdown-mode
-    python-mode
-    rust-mode
-    typescript-mode
-    yaml-mode) . tree-sitter-mode))
-
-(use-package tree-sitter-langs
-  :hook
-  (tree-sitter-after-on . tree-sitter-hl-mode))
-
-;; Languages
-
-(use-package clojure-mode
-  :mode "\\.clj"
-  :hook ((clojure-refactor-mode . clojure-mode)
-         (clojure-mode . eglot-ensure)))
-
-(use-package cider
-  :custom
-  ((cider-repl-display-help-banner nil)
-   (cider-repl-pop-to-buffer-on-connect 'display-only)))
-
-(use-package clj-refactor)
-
-(use-package typescript-mode
-  :after tree-sitter
-  :hook ((js-mode typescript-mode) . eglot-ensure)
-  :config
-  (define-derived-mode typescript-react-mode typescript-mode "TypeScript TSX")
-  (add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-react-mode))
-  (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-react-mode . tsx))
-
-  (define-derived-mode js-react-mode js-mode "JavaScript JSX")
-  (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js-react-mode))
-  (add-to-list 'tree-sitter-major-mode-language-alist '(javascript-react-mode . jsx))
-
-  (setq typescript-indent-level 2)
-  (setq js-indent-level 2)
-  (require 'dap-node)
-  (dap-node-setup))
-
+;; Rust
 (defun russell/rust-cargo-fix ()
   (interactive)
   (rust--compile "%s fix --allow-staged %s" rust-cargo-bin rust-cargo-default-arguments))
+(require 'rust-mode)
+(add-hook 'rust-mode-hook
+          (lambda ()
+            (keymap-local-set "C-c C-c C-f" #'russell/rust-cargo-fix)))
 
-(use-package rust-mode
-  :mode "\\.rs"
-  :hook ((rust-mode . display-line-numbers-mode)
-         (rust-mode . eglot-ensure))
-  :bind
-  (:map rust-mode-map (("C-c C-c C-f" . #'russell/rust-cargo-fix))))
- 
-(use-package yaml-mode
-  :mode "\\.ya?ml")
+;; YAML
+(require 'yaml-mode)
 
-(use-package yaml-pro
-  :hook
-  ((yaml-mode) . yaml-pro-ts-mode))
+(require 'yaml-pro)
+(add-hook 'yaml-mode #'yaml-pro-ts-mode)
 
-(use-package hcl-mode
-  :mode "\\.\\(hcl\\|tf\\)")
+;; HCL
+(require 'hcl-mode)
 
-(use-package parinfer-rust-mode
-    :hook ((emacs-lisp-mode
-            clojure-mode
-            scheme-mode
-            lisp-mode
-            racket-mode) . parinfer-rust-mode)
-    :init
-    (setq parinfer-rust-auto-download t))
+;;; Editor Config
+(require 'editorconfig)
+(add-hook 'prog-mode-hook #'editorconfig-mode)
+
+;;; Parinfer
+; use parinfer for lisps
+(require 'parinfer-rust-mode)
+(setq parinfer-rust-auto-download t)
+(defvar russell/parinfer-modes
+  '(clojure-mode
+    emacs-lisp-mode
+    lisp-mode
+    racket-mode
+    scheme-mode))
+(dolist (mode russell/parinfer-modes)
+  (let ((hook-name (format "%s-hook" (symbol-name mode))))
+    (add-hook (intern hook-name) #'parinfer-rust-mode)))
+
+;;; Register eglot modes
+(defvar russell/eglot-mode-list
+  '(;clojure-mode ; prefer CIDER
+    ;emacs-lisp-mode
+    js-mode
+    rust-mode
+    typescript-mode))
+(dolist (mode russell/eglot-mode-list)
+  (let ((hook-name (format "%s-hook" (symbol-name mode))))
+    (add-hook (intern hook-name) #'eglot-ensure)))
 
 (provide 'russell-lang)
 

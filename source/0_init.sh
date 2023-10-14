@@ -21,8 +21,12 @@ function is_guix {
     [[ -f "/etc/os-release" && "$(cat /etc/os-release 2> /dev/null)" =~ Guix ]] || return 1
 }
 
+function is_nix {
+    return 1
+}
+
 function get_os {
-    for os in macos ubuntu guix; do
+    for os in macos ubuntu guix nix; do
         is_$os; [[ $? == ${1:-0} ]] && echo $os
     done
 }

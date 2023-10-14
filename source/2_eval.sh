@@ -1,5 +1,7 @@
 if is_ubuntu; then
-   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    if [ -d "/home/linuxbrew/" ]; then
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
 fi
 
 if [ -d $CARGO_PATH ]; then . "$CARGO_PATH/env"; fi

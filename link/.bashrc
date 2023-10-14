@@ -1,8 +1,14 @@
+export SHELL
+
 # If not running interactively, don't do anything
 case $- in
   *i*) ;;
     *) return;;
 esac
+
+if [ -f /etc/bashrc ]; then
+    source /etc/bashrc
+fi
 
 if [ ! -n "${DOTFILES:+1}" ]; then
   export DOTFILES=~/.dotfiles

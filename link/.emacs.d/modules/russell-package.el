@@ -1,54 +1,73 @@
 ;;; russell-package.el -*- lexical-binding: t; -*-
 
-(require 'package)
-(require 'time-date)
+;;; Packages to try:
+;; tree-edit, evil-tree-edit
+;; ibuffer-project
+;; tabspaces
+;; multi-vterm
+;; emacs-everywhere
+;; revisit solaire-mode
+;; revisit vertico-posframe
 
-(add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/"))
-(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
-(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/"))
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/"))
+;; Defaults
+(add-to-list 'package-selected-packages 'savehist)
 
-(customize-set-variable 'package-archive-priorities
-                        '(("gnu"    . 99)   
-                          ("nongnu" . 90)
-                          ("melpa-stable" . 80)
-                          ("melpa"  . 0)
-                          ("org" . 0)))
+;; EVIL
+(add-to-list 'package-selected-packages 'evil)
+(add-to-list 'package-selected-packages 'evil-collection)
+(add-to-list 'package-selected-packages 'evil-nerd-commenter)
 
-(package-initialize)
+;; Completion
+(add-to-list 'package-selected-packages 'cape)
+(add-to-list 'package-selected-packages 'consult)
+(add-to-list 'package-selected-packages 'corfu)
+(add-to-list 'package-selected-packages 'corfu-terminal)
+(add-to-list 'package-selected-packages 'embark)
+(add-to-list 'package-selected-packages 'embark-consult)
+(add-to-list 'package-selected-packages 'marginalia)
+(add-to-list 'package-selected-packages 'orderless)
+(add-to-list 'package-selected-packages 'vertico)
 
-(require 'use-package)
-(setq use-package-always-ensure t)
+;; Term
+(add-to-list 'package-selected-packages 'exec-path-from-shell)
+(add-to-list 'package-selected-packages 'vterm)
 
-(use-package quelpa
-  :config
-  (setq quelpa-upgrade-interval 7)
-  (setq quelpa-update-melpa-p nil)
-  (setq quelpa-checkout-melpa-p nil)
-  :hook
-  (after-init-hook . quelpa-upgrade-all-maybe))
+;; VCS
+(add-to-list 'package-selected-packages 'magit)
 
-(if package-archive-contents
-  ;; Check if packages are stale (older than n days)
-  (when (cl-some
-         (lambda (archive)
-           (let* ((today (decode-time nil nil t))
-                  (archive-name (expand-file-name
-                                 (format "archives/%s/archive-contents" archive)
-                                 package-user-dir))
-                  (last-update-time (decode-time (file-attribute-modification-time
-                                                  (file-attributes archive-name))))
-                  (delta (make-decoded-time :day 1)))
-             (time-less-p (encode-time (decoded-time-add last-update-time delta))
-                          (encode-time today))))
-         (mapcar #'car package-archives))
-    (progn
-      (message "russell/package: Package archives stale, refreshing")
-      (package-refresh-contents t))) ;; in the background
-  (progn
-    (message "russell/package: Package archives empty, refreshing")
-    (package-refresh-contents)))
+;; UI
+(add-to-list 'package-selected-packages 'all-the-icons)
+(add-to-list 'package-selected-packages 'all-the-icons-completion)
+(add-to-list 'package-selected-packages 'all-the-icons-dired)
+(add-to-list 'package-selected-packages 'dired-single)
+(add-to-list 'package-selected-packages 'diredfl)
+(add-to-list 'package-selected-packages 'doom-modeline)
+(add-to-list 'package-selected-packages 'emojify)
+(add-to-list 'package-selected-packages 'helpful)
+(add-to-list 'package-selected-packages 'modus-themes)
+(add-to-list 'package-selected-packages 'pulsar)
+(add-to-list 'package-selected-packages 'rainbow-delimiters)
+(add-to-list 'package-selected-packages 'treemacs)
+(add-to-list 'package-selected-packages 'treemacs-magit)
+
+;; Lang
+(add-to-list 'package-selected-packages 'org-appear)
+
+(add-to-list 'package-selected-packages 'cider)
+(add-to-list 'package-selected-packages 'clj-refactor)
+(add-to-list 'package-selected-packages 'clojure-mode)
+(add-to-list 'package-selected-packages 'consult-eglot)
+(add-to-list 'package-selected-packages 'editorconfig)
+(add-to-list 'package-selected-packages 'flycheck-clojure)
+(add-to-list 'package-selected-packages 'geiser)
+(add-to-list 'package-selected-packages 'geiser-guile)
+(add-to-list 'package-selected-packages 'hcl-mode)
+(add-to-list 'package-selected-packages 'parinfer-rust-mode)
+(add-to-list 'package-selected-packages 'rust-mode)
+(add-to-list 'package-selected-packages 'treesit-auto)
+(add-to-list 'package-selected-packages 'typescript-mode)
+(add-to-list 'package-selected-packages 'yaml-mode)
+(add-to-list 'package-selected-packages 'yaml-pro)
 
 (provide 'russell-package)
 

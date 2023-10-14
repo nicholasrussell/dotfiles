@@ -1,20 +1,23 @@
 ;;; russell-ui.el -*- lexical-binding: t; -*-
 
-;; Modeline
-(use-package doom-modeline
-  :init
-  (doom-modeline-mode 1))
+;;; Custom
+;; Disable customize by redirecting writing to /dev/null
+(setq-default custom-file null-device)
 
-(use-package mini-modeline
-   :after doom-modeline)
-;;   :config
-;;   (mini-modeline-mode t))
+;; Modeline
+; First run: M-x nerd-icons-install-fonts
+(require 'doom-modeline)
+(doom-modeline-mode 1)
+
+;(require 'mini-modeline)
+;(mini-modeline-mode t)
 
 ;; Line Numbers
 (column-number-mode)
-(setq-default display-line-numbers-width 3)
+(setq-default display-line-numbers-width 2)
 (setq-default display-line-numbers-widen t)
 (setq-default display-line-numbers-type 'relative)
+(setq-default display-line-numbers-grow-only t)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 (add-hook 'text-mode-hook #'display-line-numbers-mode)
 (add-hook 'conf-mode-hook #'display-line-numbers-mode)
@@ -24,63 +27,36 @@
       show-paren-highlight-openparen t
       show-paren-when-point-inside-paren t
       show-paren-when-point-in-periphery t)
+(setq blink-matching-paren nil)
 (add-hook 'prog-mode-hook #'show-paren-mode)
 
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-
-(setq blink-matching-paren nil)
+(require 'rainbow-delimiters)
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
 ;; Highlight line
-(use-package hl-line
-  :hook
-  ((prog-mode
-    text-mode
-    conf-mode)
-   . hl-line-mode))
+(add-hook 'prog-mode-hook #'hl-line-mode)
+(add-hook 'text-mode-hook #'hl-line-mode)
+(add-hook 'conf-mode-hook #'hl-line-mode)
 
 ;; Pulse line for cursor point focus
-(use-package pulsar
-  :init
-  (pulsar-global-mode 1)
-  :config
-  (setq pulsar-delay 0.025)
-  (setq pulsar-iterations 10))
+(require 'pulsar)
+(setq pulsar-delay 0.025)
+(setq pulsar-iterations 10)
+(pulsar-global-mode 1)
 
 ;; all-the-icons
 ; First run: M-x all-the-icons-install-fonts
-(use-package all-the-icons
-  :if (display-graphic-p))
-(use-package all-the-icons-completion
-  :if (display-graphic-p))
+(when (display-graphic-p)
+  (require 'all-the-icons)
+  (require 'all-the-icons-completion)
+  (require 'all-the-icons-dired)
+  (add-hook 'dired-mode-hook #'all-the-icons-dired-mode))
 
 ;;; Theme
-(setq custom-theme-directory (expand-file-name "themes" user-emacs-directory))
-;; Disable customize by redirecting writing to /dev/null
-(setq-default custom-file null-device)
-
-(use-package modus-themes
-  :init
-  (load-theme 'modus-operandi 'no-confirm)
-  :custom-face
-  (hl-line ((t (:box (:line-width (-1 . -1) :color "#e0e0e0" :style nil) :background "#ffffff")))))
-
-;; (use-package doom-themes
-;;   :init
-;;   (load-theme 'doom-nord 'no-confirm))
-
-;; (use-package lambda-themes
-;;   :straight (:type git :host github :repo "lambda-emacs/lambda-themes")
-;;   :config
-;;   (load-theme 'lambda-dark-faded 'no-confirm))
-;; (quelpa '(lambda-themes :fetcher git :url "https://github.com/lambda-emacs/lambda-themes.git"))
-;; (setq lambda-themes-set-italic-comments nil)
-;; (setq lambda-themes-set-italic-keywords nil)
-;; (setq lambda-themes-set-variable-pitch nil)
-
-;; (use-package solaire-mode
-;;  :init
-;;  (solaire-global-mode 1))
+(setq custom-theme-directory (expand-file-name "themes" russell/emacs-home))
+(require 'modus-themes)
+(load-theme 'modus-operandi 'no-confirm)
+(custom-theme-set-faces 'modus-operandi '(hl-line ((t (:box (:line-width (-1 . -1) :color "#e0e0e0" :style nil) :background "#ffffff")))))
 
 ;; Fonts
 (defun russell/set-fonts (&optional frame)
@@ -99,25 +75,6 @@
             (russell/set-fonts (selected-frame))))
   (russell/set-fonts (selected-frame)))
 
-;; Visual undo
-(use-package undo-tree
-  :init
-  (global-undo-tree-mode t)
-  :custom
-  (undo-tree-history-directory-alist `(("." . ,(expand-file-name "undo" user-emacs-directory))))
-  :config
-  (setq undo-tree-visualizer-diff t
-        undo-tree-auto-save-history t
-        undo-tree-enable-undo-in-region t
-        ;; Increase undo limits to avoid emacs prematurely truncating the undo
-        ;; history and corrupting the tree. This is larger than the undo-fu
-        ;; defaults because undo-tree trees consume exponentially more space,
-        ;; and then some when `undo-tree-enable-undo-in-region' is involved. See
-        ;; syl20bnr/spacemacs#12110
-        undo-limit 800000           ; 800kb (default is 160kb)
-        undo-strong-limit 12000000  ; 12mb  (default is 240kb)
-        undo-outer-limit 128000000)) ; 128mb (default is 24mb)
-
 ;; Minibuffer
 (setq enable-recursive-minibuffers t)
 (setq echo-keystrokes 0.1)
@@ -127,28 +84,43 @@
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 ;; Dired
-(use-package dired
-  :ensure nil
-  :commands dired-jump
-  :custom ((dired-listing-switches "-alghov --group-directories-first --time-style=long-iso"))
-  :config
-  (when russell/mac-os-p
-    (setq insert-directory-program "gls" dired-use-ls-dired t)))
-(use-package dired-single)
-(use-package all-the-icons-dired
-  :hook (dired-mode . all-the-icons-dired-mode))
-(use-package diredfl
-  :hook (dired-mode . diredfl-mode))
+; Keep dired to a single buffer. TODO integrate this automatically
+(require 'dired-single)
+; extra dired font lock rules
+(when (display-graphic-p)
+  (require 'diredfl)
+  (add-hook 'dired-mode-hook #'diredfl-mode))
 
 ;; Emoji
-(use-package emojify
-  :hook (after-init . global-emojify-mode)
-  :custom ((emojify-emoji-styles '(unicode))))
+; due to a bug in emojify, set this var first
+(setq emojify-display-styles 'unicode)
+(require 'emojify)
+(add-hook 'after-init-hook #'global-emojify-mode)
 
 ;; Opacity
 (defun russell/alpha (n)
   (interactive "nAlpha: ")
   (set-frame-parameter nil 'alpha-background n))
+
+;; Better hlp pages
+(require 'helpful)
+(keymap-set helpful-mode-map "<remap> <revert-buffer>" #'helpful-update)
+(keymap-global-set "<remap> <describe-command>" #'helpful-command)
+(keymap-global-set "<remap> <describe-function>" #'helpful-callable)
+(keymap-global-set "<remap> <describe-key>" #'helpful-key)
+(keymap-global-set "<remap> <describe-symbol>" #'helpful-symbol)
+(keymap-global-set "<remap> <describe-variable>" #'helpful-variable)
+(keymap-global-set "C-h F" #'helpful-function)
+(keymap-global-set "C-h K" #'describe-keymap)
+
+;; File tree
+; https://github.com/Alexander-Miller/treemacs/issues/1017#issuecomment-1515602288
+(add-to-list 'image-types 'svg)
+(require 'treemacs)
+(setq treemacs-follow-after-init t
+      treemacs-is-never-other-window t
+      treemacs-sorting 'alphabetic-case-insensitive-asc)
+(require 'treemacs-magit)
 
 (provide 'russell-ui)
 

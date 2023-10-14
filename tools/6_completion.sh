@@ -7,8 +7,6 @@ if is_macos; then
     idempotent_brew_install docker-completion
     # idempotent_brew_install gradle-completion # incompatible with bash@2
     idempotent_brew_install pip-completion
-else
-    log_warn "Implement for debian"
 fi
 
 log_header2 "Finished setting up auto completion.\n"

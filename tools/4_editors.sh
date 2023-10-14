@@ -4,8 +4,14 @@ log_header2 "Installing editors..."
 
 # Emacs
 function install_emacs_debian {
-    if [ ! -d /opt/emacs ]; then
-        cargo install tree-sitter-cli
+    log_info "Installing Emacs..."
+    if [ ! -d /opt/emacs ] || [[ -v DOTFILES_TOOLS_FORCE ]]; then
+        if [[ -v DOTFILES_TOOLS_FORCE ]]; then
+            cargo install --force tree-sitter-cli
+        else
+            cargo install tree-sitter-cli
+        fi
+        sudo rm -rf /opt/emacs
         sudo git clone --depth 1 --branch emacs-29 https://git.savannah.gnu.org/git/emacs.git /opt/emacs
         sudo chown -R nrussell:nrussell /opt/emacs
         cd /opt/emacs
@@ -13,14 +19,14 @@ function install_emacs_debian {
         export CFLAGS="$CFLAGS -O2"
         export NATIVE_FULL_AOT="1"
         ./autogen.sh
-        ./configure --with-native-compilation --with-x-toolkit=gtk3 --without-xaw3d --with-modules --with-cairo --with-json --with-mailutils --with-tree-sitter
+        ./configure --with-native-compilation --with-modules --with-json --with-mailutils --with-tree-sitter
         make -j$(nproc)
-        make install
+        sudo make install
         cd -
+        log_info "Finished installing Emacs."
+    else
+        log_info "Emacs already installed!"
     fi
-
-    # Install Clojure LSP
-    sudo bash < <(curl -s https://raw.githubusercontent.com/clojure-lsp/clojure-lsp/master/install)
 }
 
 function install_emacs_macos {
@@ -29,13 +35,11 @@ function install_emacs_macos {
 }
 
 function install_emacs {
-    log_info "Installing Emacs..."
     if is_macos; then
         install_emacs_macos
     else
         install_emacs_debian
     fi
-    log_info "Finished installing Emacs."
 }
 
 install_emacs
@@ -46,14 +50,19 @@ function install_nvim {
     if is_macos; then
         idempotent_brew_installbrew install neovim
     else
-        add_ppa ppa:neovim-ppa/unstable
-        apt_update 
-        apt_install neovim
+        if ! [ -x $(command -v nvim) ] || [[ -v DOTFILES_TOOLS_FORCE ]]; then
+            add_ppa ppa:neovim-ppa/unstable
+            apt_update
+            apt_install neovim
+            log_info "Finished installing nvim."
+        else
+            log_info "nvim already installed!"
+        fi
     fi
-    log_info "Finished installing nvim."
     
     log_info "Configuring nvim..."
-    if [ ! -d ~/.local/share/nvim/site ]; then
+    if [ ! -d ~/.local/share/nvim/site ] || [[ -v DOTFILES_TOOLS_FORCE ]]; then
+        rm -rf ~/.local/share/nvim/site/pack/packer/start/packer.nvim
         git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
     fi
     log_info "Finished configuring nvim."

@@ -7,16 +7,24 @@ function install_fonts {
         idempotent_brew_tap homebrew/cask-fonts
         idempotent_brew_install cask font-source-code-pro --fontdir=/Library/Fonts
     else
-        wget -q https://fonts.google.com/download?family=Source%20Code%20Pro -O SourceCodePro.zip
-        unzip -qq SourceCodePro.zip -d SourceCodePro
-        sudo mv SourceCodePro/*.ttf /usr/local/share/fonts
-        fc-cache -f -v
-        rm -rf SourceCodePro*
+        log_info "Installing fonts..."
+        if ! fc-list | grep -q SourceCodePro || [[ -v DOTFILES_TOOLS_FORCE ]]; then
+            wget -q https://fonts.google.com/download?family=Source%20Code%20Pro -O SourceCodePro.zip
+            unzip -qq SourceCodePro.zip -d SourceCodePro
+            sudo mv SourceCodePro/*.ttf /usr/local/share/fonts
+            fc-cache -f -v
+            rm -rf SourceCodePro*
+            log_info "Finished installing fonts."
+        else
+            log_info "Fonts already installed!"
+        fi
     fi
 }
 
 function install_htop_debian {
+    log_info "Installing htop..."
     apt_install htop
+    log_info "Finished installing htop."
 }
 
 function install_htop {
@@ -53,7 +61,9 @@ function install_ripgrep {
     if is_macos; then
         idempotent_brew_install ripgrep
     else
-        log_warn "Implement for debian"
+        log_info "Installing ripgrap..."
+        apt_install ripgrep
+        log_info "Finished installing ripgrep."
     fi
 }
 
@@ -99,11 +109,11 @@ fi
 
 install_fonts
 install_htop
-install_docker
-install_kcat
+# install_docker
+# install_kcat
 install_ripgrep
-install_babashka
-install_wm
+# install_babashka
+# install_wm
 # install_nyxt
 
 log_header2 "Finished installing miscellaneous tools.\n"

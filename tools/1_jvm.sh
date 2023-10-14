@@ -3,10 +3,15 @@
 log_header2 "Installing JVM tools..."
 
 function install_jenv_debian {
-    if [ -d ~/.jenv ]; then
-        cd ~/.jenv && git pull -q && cd -
-    else
+    log_info "Installing jenv..."
+    if [ ! -d ~/.jenv ]; then
         git clone https://github.com/jenv/jenv.git ~/.jenv
+        log_info "Finished installing jenv."
+    elif [[ -v DOTFILES_TOOLS_FORCE ]]; then
+        cd ~/.jenv && git pull -q && cd - > /dev/null
+        log_info "Finished updating jenv."
+    else
+        log_info "jenv is already installed!"
     fi
 }
 
@@ -31,11 +36,16 @@ function install_jdk_debian {
         sudo mkdir -p /usr/lib/jvm
     fi
 
-    if [ ! -d /usr/lib/jvm/jdk-17.0.5+8 ]; then
-        wget -q https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.5%2B8/OpenJDK17U-jdk_x64_linux_hotspot_17.0.5_8.tar.gz
-        tar xzf OpenJDK17U-jdk_x64_linux_hotspot_17.0.5_8.tar.gz
-        sudo mv jdk-17.0.5+8/ /usr/lib/jvm/
-        rm OpenJDK17U-jdk_x64_linux_hotspot_17.0.5_8.tar.gz
+    log_info "Installing JDK..."
+    if [ ! -d /usr/lib/jvm/jdk-21+35 ] || [[ -v DOTFILES_TOOLS_FORCE ]]; then
+        sudo rm -rf /usr/lib/jvm/jdk-21+35/
+        wget https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21%2B35/OpenJDK21U-jdk_x64_linux_hotspot_21_35.tar.gz
+        tar xzf OpenJDK21U-jdk_x64_linux_hotspot_21_35.tar.gz
+        sudo mv jdk-21+35/ /usr/lib/jvm/
+        rm OpenJDK21U-jdk_x64_linux_hotspot_21_35.tar.gz
+        log_info "Finished installing JDK."
+    else
+        log_info "JDK is already installed!"
     fi
 }
 
@@ -48,27 +58,33 @@ function install_jdk {
 }
 
 function configure_jenv {
+    log_info "Configuring jenv..."
     if is_macos; then
         jenv add /Library/Java/JavaVirtualMachines/ibm-semeru-open-17.jdk/Contents/Home/
+        jenv rehash
     else
-        jenv add /usr/lib/jvm/jdk-17.0.5+8/
+        if ! jenv versions | grep -q 21; then
+            jenv add /usr/lib/jvm/jdk-21+35/ > /dev/null
+            jenv rehash
+        fi
     fi
-    jenv rehash
     if is_macos; then
         jenv global ibm64-17.0.1
     else
-        jenv global 17
+        jenv global 21
     fi
+    log_info "Finished configuring jenv."
 }
 
 function install_lein_debian {
-    if [ ! -e /usr/local/bin/lein ]; then
+    log_info "Installing leiningen..."
+    if [ ! -e /usr/local/bin/lein ] || [[ -v DOTFILES_TOOLS_FORCE ]]; then
         wget -q https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein
         sudo mv lein /usr/local/bin
         sudo chmod a+x /usr/local/bin/lein
-        /usr/local/bin/lein
+        log_info "Finished installing leiningen."
     else
-        log_info "lein is already installed"
+        log_info "leiningen is already installed!"
     fi
 }
 
@@ -80,9 +96,20 @@ function install_lein {
     fi
 }
 
+function install_clojure_lsp {
+    log_info "Installing Clojure LSP..."
+    if ! [ -x $(command -v clojure-lsp) ] || [[ -v DOTFILES_TOOLS_FORCE ]]; then
+        sudo bash < <(curl -s https://raw.githubusercontent.com/clojure-lsp/clojure-lsp/master/install)
+        log_info "Finished installing Clojure LSP."
+    else
+        log_info "Clojure LSP is already installed!"
+    fi
+}
+
 install_jenv
 install_jdk
 configure_jenv
 install_lein
+install_clojure_lsp
 
 log_header2 "Finished installing JVM tools.\n"

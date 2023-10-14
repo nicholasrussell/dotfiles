@@ -1,7 +1,6 @@
 ;;; russell-vcs.el -*- lexical-binding: t; -*-
 
-(use-package magit)
-;(use-package forge)
+(require 'magit)
 
 (provide 'russell-vcs)
 

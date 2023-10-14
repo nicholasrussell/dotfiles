@@ -5,7 +5,29 @@ export DOTFILES=~/.dotfiles
 source $DOTFILES/util/dotfiles.sh
 
 ## Run dotfiles tools
+files=()
+force=false
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -f|--force)
+      force=true
+      shift
+      ;;
+    *)
+      files+=("$1")
+      shift
+      ;;
+  esac
+done
+
+if $force; then
+    export DOTFILES_TOOLS_FORCE=true
+fi
+
 prompt_sudo
-dotfiles_tools
+dotfiles_tools "${files[@]}"
+
+unset files force DOTFILES_TOOLS_FORCE
 
 log_success "Done!"
