@@ -6,6 +6,15 @@
 (when (null russell/emacs-home)
   (setq russell/emacs-home user-emacs-directory))
 
+;; Data directories
+;; TODO ensure XDG_DATA_HOME is available to Emacs daemon
+(defvar russell/emacs-data-home (file-name-concat (or (getenv "XDG_DATA_HOME") "~/.local/share") "emacs"))
+(defvar russell/emacs-cache-home (file-name-concat (or (getenv "XDG_CACHE_HOME") "~/.cache") "emacs"))
+(when (not (file-exists-p russell/emacs-data-home))
+  (make-directory russell/emacs-data-home t))
+(when (not (file-exists-p russell/emacs-cache-home))
+  (make-directory russell/emacs-cache-home t))
+
 ;;; Emacs lisp source/compiled preference
 ;; Prefer loading newest compiled .el file
 (customize-set-variable 'load-prefer-newer t)

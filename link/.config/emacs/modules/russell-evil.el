@@ -6,7 +6,7 @@
 (customize-set-variable 'evil-want-C-i-jump nil)
 (customize-set-variable 'evil-respect-visual-line-mode t)
 (customize-set-variable 'evil-want-C-h-delete t)
-(customize-set-variable 'evil-undo-system 'undo-redo)
+(customize-set-variable 'evil-undo-system 'undo-tree)
 
 (require 'evil)
 (evil-mode 1)

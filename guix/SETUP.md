@@ -80,3 +80,9 @@
 - Prior to running, ensure "Windows Hypervisor Platform" feature is turned on
 - Run with e.g. `& 'C:\Program Files\qemu\qemu-system-x86_64.exe' -drive file=guix.img,index=0,if=none,id=nvm -device nvme,serial=deadbeef,drive=nvm -m 32G -smp 20 -device virtio-net,netdev=vmnic -netdev user,id=vmnic,hostfwd=tcp::6022-:22 -accel whpx,kernel-irqchip=off -device VGA,vgamem_mb=32768`
   - Once `guix install spice-vdagent` has been installed, add `-spice port=6900,disable-ticketing=on -chardev qemu-vdagent,id=ch1,name=vdagent,clipboard=on -device virtio-serial-pci -device virtserialport,chardev=ch1,id=ch1,name=com.redhat.spice.0`
+
+
+```
+GUIX_PROFILE="/home/nrussell/.guix-profile"
+. "$GUIX_PROFILE/etc/profile"
+```

@@ -36,26 +36,6 @@
 (customize-set-variable 'xref-show-definitions-function
                         #'xref-show-definitions-completing-read)
 
-;;; Editing
-;; Typed text replaces the selection if the selection is active,
-;; pressing delete or backspace deletes the selection.
-(delete-selection-mode)
-;; Use spaces instead of tabs
-(setq-default indent-tabs-mode nil)
-;; Do not save duplicates in kill-ring
-(customize-set-variable 'kill-do-not-save-duplicates t)
-;; Better support for files with long lines
-(setq-default bidi-paragraph-direction 'left-to-right)
-(setq-default bidi-inhibit-bpa t)
-(global-so-long-mode 1)
-;; define a key to define the word at point.
-(keymap-set global-map "M-#" #'dictionary-lookup-definition)
-;; turn on spell checking, if available.
-(with-eval-after-load 'ispell
-  (when (executable-find ispell-program-name)
-    (add-hook 'text-mode-hook #'flyspell-mode)
-    (add-hook 'prog-mode-hook #'flyspell-prog-mode)))
-
 ;;; Sessions
 ;; Turn on recentf mode
 (add-hook 'after-init-hook #'recentf-mode)
@@ -85,12 +65,56 @@
                (window-height . 10)))
 
 ;;; Backups
+(defvar russell/saves-dir (file-name-concat russell/emacs-data-home "saves/"))
+(when (not (file-exists-p russell/saves-dir))
+  (make-directory russell/saves-dir t))
 (setq backup-by-copying t)
-(setq backup-directory-alist `(("." . "~/.emacs-saves")))
-(setq auto-save-file-name-transforms `((".*" "~/.emacs-saves" t)))
+(setq backup-directory-alist `(("." . ,russell/saves-dir)))
+(setq auto-save-file-name-transforms `((".*" ,russell/saves-dir t)))
+(setq delete-old-versions t)
+(setq kept-old-versions 1)
+(setq kept-new-versions 1)
+(setq version-control t)
+
+;;; Editing
+;; Typed text replaces the selection if the selection is active,
+;; pressing delete or backspace deletes the selection.
+(delete-selection-mode)
+;; Use spaces instead of tabs
+(setq-default indent-tabs-mode nil)
+;; Do not save duplicates in kill-ring
+(customize-set-variable 'kill-do-not-save-duplicates t)
+;; Better support for files with long lines
+(setq-default bidi-paragraph-direction 'left-to-right)
+(setq-default bidi-inhibit-bpa t)
+(global-so-long-mode 1)
+;; define a key to define the word at point.
+(keymap-set global-map "M-#" #'dictionary-lookup-definition)
+;; turn on spell checking, if available.
+(with-eval-after-load 'ispell
+  (when (executable-find ispell-program-name)
+    (add-hook 'text-mode-hook #'flyspell-mode)
+    (add-hook 'prog-mode-hook #'flyspell-prog-mode)))
 
 ;;; Projects
 (require 'project)
+
+;;; Undo system
+;; Use undo-tree
+(require 'undo-tree)
+(customize-set-variable 'undo-tree-history-directory-alist `(("." . ,(file-name-concat russell/emacs-cache-home "undo"))))
+(setq undo-tree-visualizer-diff t
+      undo-tree-auto-save-history t
+      undo-tree-enable-undo-in-region t
+      ;; Increase undo limits to avoid emacs prematurely truncating the undo
+      ;; history and corrupting the tree. This is larger than the undo-fu
+      ;; defaults because undo-tree trees consume exponentially more space,
+      ;; and then some when `undo-tree-enable-undo-in-region' is involved. See
+      ;; syl20bnr/spacemacs#12110
+      undo-limit 800000           ; 800kb (default is 160kb)
+      undo-strong-limit 12000000  ; 12mb  (default is 240kb)
+      undo-outer-limit 128000000) ; 128mb (default is 24mb)
+(global-undo-tree-mode 1)
 
 (provide 'russell-defaults)
 

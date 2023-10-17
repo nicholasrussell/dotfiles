@@ -23,7 +23,7 @@
   #:use-module (gnu system)
   #:use-module (gnu system install)
   #:use-module (gnu packages version-control)
-  #:use-module (gnu packages vim)
+  #:use-module (gnu packages neovim)
   #:use-module (gnu packages curl)
   #:use-module (gnu packages emacs)
   #:use-module (gnu packages linux)

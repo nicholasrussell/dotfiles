@@ -11,6 +11,7 @@
 
 ;; Defaults
 (add-to-list 'package-selected-packages 'savehist)
+(add-to-list 'package-selected-packages 'undo-tree)
 
 ;; EVIL
 (add-to-list 'package-selected-packages 'evil)

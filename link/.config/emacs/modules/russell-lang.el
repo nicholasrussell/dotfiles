@@ -42,6 +42,9 @@
     (require 'flycheck-clojure)
     (flycheck-clojure-setup)))
 
+;; Scheme
+(customize-set-variable 'scheme-program-name "guile")
+
 ;; JavaScript / TypeScript
 (require 'typescript-mode)
 (define-derived-mode typescript-react-mode typescript-mode "TypeScript TSX")
@@ -92,10 +95,12 @@
 ;;; Register eglot modes
 (defvar russell/eglot-mode-list
   '(;clojure-mode ; prefer CIDER
-    ;emacs-lisp-mode
     js-mode
+    js-ts-mode
     rust-mode
-    typescript-mode))
+    rust-ts-mode
+    typescript-mode
+    typescript-ts-mode))
 (dolist (mode russell/eglot-mode-list)
   (let ((hook-name (format "%s-hook" (symbol-name mode))))
     (add-hook (intern hook-name) #'eglot-ensure)))
