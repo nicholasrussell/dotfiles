@@ -18,7 +18,7 @@ function install_pyenv_debian {
 
 function install_pyenv {
     if is_macos; then
-        idempotent_brew_install pyenv
+        brew_install pyenv
     else
         install_pyenv_debian
     fi

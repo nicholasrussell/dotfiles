@@ -17,7 +17,7 @@ function install_jenv_debian {
 
 function install_jenv {
     if is_macos; then
-        idempotent_brew_install jenv
+        brew_install jenv
     else
         install_jenv_debian
     fi
@@ -90,7 +90,7 @@ function install_lein_debian {
 
 function install_lein {
     if is_macos; then
-        idempotent_brew_install leiningen
+        brew_install leiningen
     else
         install_lein_debian
     fi
@@ -98,8 +98,10 @@ function install_lein {
 
 function install_clojure_lsp {
     log_info "Installing Clojure LSP..."
-    if ! [ -x $(command -v clojure-lsp) ] || [[ -v DOTFILES_TOOLS_FORCE ]]; then
-        sudo bash < <(curl -s https://raw.githubusercontent.com/clojure-lsp/clojure-lsp/master/install)
+    if ! command -v clojure-lsp > /dev/null 2>&1 || [[ -v DOTFILES_TOOLS_FORCE ]]; then
+        curl -s https://raw.githubusercontent.com/clojure-lsp/clojure-lsp/master/install > clojure-lsp-install
+        sudo bash clojure-lsp-install
+        rm clojure-lsp-install
         log_info "Finished installing Clojure LSP."
     else
         log_info "Clojure LSP is already installed!"

@@ -53,6 +53,6 @@ guix_download_and_verify() {
 tmp_path="$(mktemp -t -d guix.XXXXXX)"
 guix_get_latest_ver
 guix_gpg_keyring
-guix_download_and_verify $tmp_path
+guix_download_and_verify "$tmp_path"
 echo "$BIN_PATH"
 

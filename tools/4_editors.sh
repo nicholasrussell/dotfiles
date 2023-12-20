@@ -30,7 +30,7 @@ function install_emacs_debian {
 }
 
 function install_emacs_macos {
-    idempotent_brew_install cask emacs
+    brew_install cask emacs
     launchctl load -w ~/Library/LaunchAgents/gnu.emacs.daemon.plist
 }
 
@@ -48,22 +48,16 @@ install_emacs
 function install_nvim {
     log_info "Installing nvim..."
     if is_macos; then
-        idempotent_brew_installbrew install neovim
+        brew_install install neovim
     else
-        if ! [ -x $(command -v nvim) ] || [[ -v DOTFILES_TOOLS_FORCE ]]; then
-            add_ppa ppa:neovim-ppa/unstable
-            apt_update
-            apt_install neovim
+        if ! command -v nvim > /dev/null 2>&1 || [[ -v DOTFILES_TOOLS_FORCE ]]; then
+            sudo apt-get -qq -y install neovim > /dev/null 2>&1
+            sudo update-alternatives --install /usr/bin/vi vi /usr/bin/nvim 110
+            sudo update-alternatives --install /usr/bin/vim vim /usr/bin/nvim 110
             log_info "Finished installing nvim."
         else
             log_info "nvim already installed!"
         fi
-    fi
-    
-    log_info "Configuring nvim..."
-    if [ ! -d ~/.local/share/nvim/site ] || [[ -v DOTFILES_TOOLS_FORCE ]]; then
-        rm -rf ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-        git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
     fi
     log_info "Finished configuring nvim."
 }

@@ -22,7 +22,7 @@ function install_rust_tools {
 
 function install_rust_lsp {
     log_info "Installing Rust LSP..."
-    if ! [ -x $(command -v rust-analyzer) ] || [[ -v DOTFILES_TOOLS_FORCE ]]; then
+    if ! command -v rust-analyzer > /dev/null 2>&1 || [[ -v DOTFILES_TOOLS_FORCE ]]; then
         curl -L https://github.com/rust-lang/rust-analyzer/releases/latest/download/rust-analyzer-x86_64-unknown-linux-gnu.gz | gunzip -c - | sudo tee /usr/local/bin/rust-analyzer > /dev/null
         sudo chmod +x /usr/local/bin/rust-analyzer
         log_info "Finished installing Rust LSP."

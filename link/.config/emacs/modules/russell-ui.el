@@ -102,7 +102,7 @@
   (interactive "nAlpha: ")
   (set-frame-parameter nil 'alpha-background n))
 
-;; Better hlp pages
+;; Better help pages
 (require 'helpful)
 (keymap-set helpful-mode-map "<remap> <revert-buffer>" #'helpful-update)
 (keymap-global-set "<remap> <describe-command>" #'helpful-command)
@@ -121,6 +121,10 @@
       treemacs-is-never-other-window t
       treemacs-sorting 'alphabetic-case-insensitive-asc)
 (require 'treemacs-magit)
+
+;; Winner
+;;; Enable window configuration history (C-c <left> undo, C-c <right> redo)
+(winner-mode 1)
 
 (provide 'russell-ui)
 

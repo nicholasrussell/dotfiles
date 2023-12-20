@@ -61,9 +61,17 @@
   (interactive)
   (rust--compile "%s fix --allow-staged %s" rust-cargo-bin rust-cargo-default-arguments))
 (require 'rust-mode)
+(setq rust-format-on-save t)
 (add-hook 'rust-mode-hook
           (lambda ()
             (keymap-local-set "C-c C-c C-f" #'russell/rust-cargo-fix)))
+
+;; sh
+(customize-set-variable 'flymake-shellcheck-allow-external-files t)
+(add-hook 'bash-ts-mode-hook 'flymake-shellcheck-load)
+(add-hook 'sh-mode-hook 'flymake-shellcheck-load)
+(add-hook 'bash-ts-mode-hook #'flymake-mode)
+(add-hook 'sh-mode-hook #'flymake-mode)
 
 ;; YAML
 (require 'yaml-mode)

@@ -9,12 +9,12 @@ function log_error { echo -e "\r\033[1;31m$@\033[0m"; }
 
 ## dotfiles functions
 function dotfiles_link {
-    if [ -e $DOTFILES/backup/link ]; then
-        rm -r $DOTFILES/backup/link
+    if [ -e "$DOTFILES/backup/link" ]; then
+        rm -r "$DOTFILES/backup/link"
     fi
-    mkdir -p $DOTFILES/backup/link
+    mkdir -p "$DOTFILES/backup/link"
 
-    source $DOTFILES/source/0_init.sh
+    source "$DOTFILES/source/0_init.sh"
 
     log_header1 "Linking files..."
     shopt -s dotglob
@@ -81,7 +81,7 @@ function dotfiles_tools {
 
     for script in "$@"; do
         maybe_match=$(printf '%s\n' "${scripts[@]}" | grep -P "_${script}\.sh")
-        if [[ maybe_match ]]; then
+        if [[ $maybe_match ]]; then
             included_scripts+=($maybe_match)
         fi
     done

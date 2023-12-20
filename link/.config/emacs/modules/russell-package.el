@@ -12,6 +12,7 @@
 ;; Defaults
 (add-to-list 'package-selected-packages 'savehist)
 (add-to-list 'package-selected-packages 'undo-tree)
+(add-to-list 'package-selected-packages 'emacs-everywhere)
 
 ;; EVIL
 (add-to-list 'package-selected-packages 'evil)

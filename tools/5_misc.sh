@@ -4,41 +4,50 @@ log_header2 "Installing miscellaneous tools..."
 
 function install_fonts {
     if is_macos; then
-        idempotent_brew_tap homebrew/cask-fonts
-        idempotent_brew_install cask font-source-code-pro --fontdir=/Library/Fonts
+        brew tap homebrew/cask-fonts
+        brew_install cask font-source-code-pro --fontdir=/Library/Fonts
     else
         log_info "Installing fonts..."
+        font_installed=false
         if ! fc-list | grep -q SourceCodePro || [[ -v DOTFILES_TOOLS_FORCE ]]; then
             wget -q https://fonts.google.com/download?family=Source%20Code%20Pro -O SourceCodePro.zip
             unzip -qq SourceCodePro.zip -d SourceCodePro
             sudo mv SourceCodePro/*.ttf /usr/local/share/fonts
-            fc-cache -f -v
             rm -rf SourceCodePro*
-            log_info "Finished installing fonts."
-        else
-            log_info "Fonts already installed!"
+            font_installed=true
         fi
+        if ! fc-list | grep -q SauceCodePro || [[ -v DOTFILES_TOOLS_FORCE ]]; then
+            wget -q https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/SourceCodePro.zip -O SauceCodePro.zip
+            unzip -qq SauceCodePro.zip -d SauceCodePro
+            sudo mv SauceCodePro/*.ttf /usr/local/share/fonts
+            rm -rf SauceCodePro*
+            font_installed=true
+        fi
+        if ! fc-list | grep -q JetBrainsMono || [[ -v DOTFILES_TOOLS_FORCE ]]; then
+            wget -q https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/JetBrainsMono.zip -O JetBrainsMono.zip
+            unzip -qq JetBrainsMono.zip -d JetBrainsMono
+            sudo mv JetBrainsMono/*.ttf /usr/local/share/fonts
+            rm -rf JetBrainsMono*
+            font_installed=true
+        fi
+        if [ "$font_installed" = true ]; then
+            fc-cache -f -v
+        fi
+        unset font_installed
+        log_info "Finished installing fonts."
     fi
-}
-
-function install_htop_debian {
-    log_info "Installing htop..."
-    apt_install htop
-    log_info "Finished installing htop."
 }
 
 function install_htop {
     if is_macos; then
-        idempotent_brew_install htop
-    else
-        install_htop_debian
+        brew_install htop
     fi
 }
 
 function install_docker_macos {
-    idempotent_brew_install cask docker
-    idempotent_brew_install docker-machine
-    idempotent_brew_install docker-compose
+    brew_install cask docker
+    brew_install docker-machine
+    brew_install docker-compose
 }
 
 function install_docker {
@@ -51,7 +60,7 @@ function install_docker {
 
 function install_kcat {
     if is_macos; then
-        idempotent_brew_install kcat
+        brew_install kcat
     else
         log_warn "Implement for debian"
     fi
@@ -59,30 +68,7 @@ function install_kcat {
 
 function install_ripgrep {
     if is_macos; then
-        idempotent_brew_install ripgrep
-    else
-        log_info "Installing ripgrap..."
-        apt_install ripgrep
-        log_info "Finished installing ripgrep."
-    fi
-}
-
-function install_babashka {
-    idempotent_brew_install borkdude/brew/babashka
-}
-
-function install_wm {
-    if is_macos; then
-        log_warn "Implement for Mac OS"
-    else
-        if ! command -v nvm > /dev/null 2>&1; then
-            /usr/lib/apt/apt-helper download-file https://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2023.02.18_all.deb keyring.deb SHA256:a511ac5f10cd811f8a4ca44d665f2fa1add7a9f09bef238cdfad8461f5239cc4
-            sudo apt install ./keyring.deb
-            rm keyring.deb
-            echo "deb http://debian.sur5r.net/i3/ $(grep '^DISTRIB_CODENAME=' /etc/lsb-release | cut -f2 -d=) universe" | sudo tee /etc/apt/sources.list.d/sur5r-i3.list
-            apt_update
-            apt_install i3
-        fi
+        brew_install ripgrep
     fi
 }
 
@@ -101,10 +87,10 @@ function install_nyxt {
 }
 
 if is_macos; then
-    idempotent_brew_install coreutils
-    idempotent_brew_install fd
-    idempotent_brew_install cmake
-    idempotent_brew_install libvterm
+    brew_install coreutils
+    brew_install fd
+    brew_install cmake
+    brew_install libvterm
 fi
 
 install_fonts
@@ -112,8 +98,6 @@ install_htop
 # install_docker
 # install_kcat
 install_ripgrep
-# install_babashka
-# install_wm
 # install_nyxt
 
 log_header2 "Finished installing miscellaneous tools.\n"

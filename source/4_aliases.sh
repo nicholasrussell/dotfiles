@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 if is_macos; then
   alias ls="gls --color=auto --group-directories-first --time-style=long-iso -hv"
 

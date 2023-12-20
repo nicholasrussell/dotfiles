@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 export CLR_NONE='\033[0m'
 export CLR_BLACK='\033[0;30m'
 export CLR_RED='\033[0;31m'
@@ -91,8 +93,8 @@ export PROMPT_CHAR='$'
 # Formats the bash prompt
 function bash_prompt_command() {
     local EXIT_CODE="$?"
-    local title_text="${USER}:${PWD/#$HOME/\~}"
-    local prompt_prefix="$(echo -ne "$CHR_LAMBDA")\[$CLR_NONE\] ${debian_chroot:+($debian_chroot)}\[$CLR_GREEN\]\u\[$CLR_NONE\]:\[$CLR_BLUE\]\w\[$CLR_NONE\]"
+    local title_text="${PWD/#$HOME/\~}"
+    local prompt_prefix="$(echo -ne "$CHR_LAMBDA")\[$CLR_NONE\] ${debian_chroot:+($debian_chroot)}\[$CLR_BLUE\]\w\[$CLR_NONE\]"
     local prompt_suffix="\n\[$CLR_WHITEi\]$PROMPT_CHAR\[$CLR_NONE\] "
     local prompt_git=" [\[$CLR_CYAN\]%s\[$CLR_NONE\]]"
     if [ $EXIT_CODE != 0 ]; then
@@ -101,7 +103,7 @@ function bash_prompt_command() {
         prompt_prefix="\[$CLR_CYAN\]${prompt_prefix}"
     fi
 
-    set_titlebar $title_text;
+    set_titlebar "$title_text";
     __git_ps1 "$prompt_prefix" "$prompt_suffix" "$prompt_git";
     git_prompt_customization
 }
