@@ -9,6 +9,20 @@
 (require 'doom-modeline)
 (doom-modeline-mode 1)
 
+(setq display-time-24hr-format t)
+(setq display-time-format "%H:%M:%S")
+(setq display-time-interval 1)
+(setq display-time-default-load-average nil)
+; (display-time-mode 1)
+
+;; (defun display-time-bottom-right ()
+;;   (and (equal (cddr (window-pixel-edges))
+;;               (cddr (window-pixel-edges (frame-root-window))))
+;;        '(#(" " 0 1 (display (space :align-to (- right 20))))
+;;          display-time-string)))
+;; (display-time-mode)
+;; (setq global-mode-string '(:eval (display-time-bottom-right)))
+
 ;(require 'mini-modeline)
 ;(mini-modeline-mode t)
 
@@ -66,7 +80,7 @@
          (mm-size (alist-get 'mm-size attrs))
          (px-x (caddr geo))
          (cm-x (/ (car mm-size) 10.0))
-         (ppcm (/ px-x cm-x)))
+         (ppcm (if (> cm-x 0) (/ px-x cm-x) 0)))
     (set-face-attribute 'default frame :font "Source Code Pro" :height (if (< ppcm 40) 130 180) :weight 'normal :width 'normal)))
 (if (daemonp)
   (add-hook 'server-after-make-frame-hook
@@ -95,7 +109,7 @@
 ; due to a bug in emojify, set this var first
 (setq emojify-display-styles 'unicode)
 (require 'emojify)
-(add-hook 'after-init-hook #'global-emojify-mode)
+; (add-hook 'after-init-hook #'global-emojify-mode)
 
 ;; Opacity
 (defun russell/alpha (n)

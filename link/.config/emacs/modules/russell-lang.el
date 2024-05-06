@@ -20,11 +20,11 @@
 (add-hook 'eglot-mode (lambda () (keymap-local-set "<remap> <xref-find-apropos>" #'consult-eglot-symbols)))
 
 ;;; Tree Sitter
-(require 'treesit-auto)
-(setq treesit-auto-install t)
-(global-treesit-auto-mode)
-(treesit-auto-install-all)
-(treesit-auto-add-to-auto-mode-alist)
+;(require 'treesit-auto)
+;(setq treesit-auto-install t)
+;(global-treesit-auto-mode)
+;(treesit-auto-install-all)
+;(treesit-auto-add-to-auto-mode-alist)
 
 ;;; Languages
 ;; Clojure
