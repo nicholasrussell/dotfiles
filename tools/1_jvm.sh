@@ -98,13 +98,17 @@ function install_lein {
 
 function install_clojure_lsp {
     log_info "Installing Clojure LSP..."
-    if ! command -v clojure-lsp > /dev/null 2>&1 || [[ -v DOTFILES_TOOLS_FORCE ]]; then
-        curl -s https://raw.githubusercontent.com/clojure-lsp/clojure-lsp/master/install > clojure-lsp-install
-        sudo bash clojure-lsp-install
-        rm clojure-lsp-install
-        log_info "Finished installing Clojure LSP."
+    if is_macos; then
+        brew_install clojure-lsp/brew/clojure-lsp-native
     else
-        log_info "Clojure LSP is already installed!"
+        if ! command -v clojure-lsp > /dev/null 2>&1 || [[ -v DOTFILES_TOOLS_FORCE ]]; then
+            curl -s https://raw.githubusercontent.com/clojure-lsp/clojure-lsp/master/install > clojure-lsp-install
+            sudo bash clojure-lsp-install
+            rm clojure-lsp-install
+            log_info "Finished installing Clojure LSP."
+        else
+            log_info "Clojure LSP is already installed!"
+        fi
     fi
 }
 

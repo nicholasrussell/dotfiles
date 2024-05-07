@@ -5,7 +5,8 @@ log_header2 "Installing miscellaneous tools..."
 function install_fonts {
     if is_macos; then
         brew tap homebrew/cask-fonts
-        brew_install cask font-source-code-pro --fontdir=/Library/Fonts
+        brew_install cask font-sauce-code-pro-nerd-font --fontdir=/Library/Fonts
+        brew_install cask font-jetbrains-mono-nerd-font --fontdir=/Library/Fonts
     else
         log_info "Installing fonts..."
         font_installed=false
@@ -46,8 +47,6 @@ function install_htop {
 
 function install_docker_macos {
     brew_install cask docker
-    brew_install docker-machine
-    brew_install docker-compose
 }
 
 function install_docker {
@@ -86,17 +85,10 @@ function install_nyxt {
     fi
 }
 
-if is_macos; then
-    brew_install coreutils
-    brew_install fd
-    brew_install cmake
-    brew_install libvterm
-fi
-
 install_fonts
 install_htop
-# install_docker
-# install_kcat
+install_docker
+install_kcat
 install_ripgrep
 # install_nyxt
 

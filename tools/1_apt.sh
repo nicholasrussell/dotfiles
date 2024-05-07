@@ -76,5 +76,10 @@ function apt_tools {
 }
 
 if is_debian; then
-	apt_tools
+    apt_tools
+elif is_macos; then
+    brew_install coreutils
+    brew_install fd
+    brew_install cmake
+    brew_install libvterm
 fi

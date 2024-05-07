@@ -5,9 +5,11 @@ log_header2 "Installing JavaScript tools..."
 function install_nvm {
     log_info "Installing nvm..."
     if ! command -v nvm > /dev/null 2>&1 || [[ -v DOTFILES_TOOLS_FORCE ]]; then
-        PROFILE=/dev/null bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash'
+        PROFILE=/dev/null bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash'
         if is_ubuntu; then
             sudo ln -sf ~/.nvm/bash_completion /etc/bash_completion.d/nvm
+        elif is_macos; then
+            [[ -r $NVM_DIR/bash_completion ]] && \. $NVM_DIR/bash_completion
         fi
         dotfiles_source
         log_info "Finished installing nvm."

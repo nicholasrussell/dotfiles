@@ -2,7 +2,7 @@
 
 if is_ubuntu; then
     if [ -d "${HOMEBREW_PREFIX}" ]; then
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        eval "\$(${HOMEBREW_PREFIX}/bin/brew shellenv)"
     fi
 fi
 

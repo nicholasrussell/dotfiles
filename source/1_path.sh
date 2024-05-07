@@ -7,7 +7,13 @@ export XDG_DATA_DIRS="/usr/local/share/:/usr/share/"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 
-if [ -z "${HOMEBREW_PREFIX}" ]; then export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"; fi
+if [ -z "${HOMEBREW_PREFIX}" ]; then
+    if is_macos; then
+        export HOMEBREW_PREFIX="/opt/homebrew"; # /usr/local for macOS on Intel, /opt/homebrew for macOS on Apple Silicon/ARM
+    else
+        export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew";
+    fi
+fi
 export CARGO_PATH="$HOME/.cargo"
 export JENV_PATH="$HOME/.jenv"
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
