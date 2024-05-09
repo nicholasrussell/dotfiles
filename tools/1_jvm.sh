@@ -24,11 +24,29 @@ function install_jenv {
 }
 
 function install_jdk_macos {
-    if [ ! -e /Library/Java/JavaVirtualMachines/ibm-semeru-open-17.jdk/ ]; then
-        wget -q https://github.com/ibmruntimes/semeru17-binaries/releases/download/jdk-17.0.1%2B12_openj9-0.29.1/ibm-semeru-open-jdk_x64_mac_17.0.1_12_openj9-0.29.1.pkg | sudo installer -pkg -target /
-        sudo installer -pkg ibm-semeru-open-jdk_x64_mac_17.0.1_12_openj9-0.29.1.pkg -target /
-        rm ibm-semeru-open-jdk_x64_mac_17.0.1_12_openj9-0.29.1.pkg
+    version="$1"
+    #if [ ! -e "/Library/Java/JavaVirtualMachines/ibm-semeru-open-${version}.jdk/" ]; then
+    #    latest=$(curl -s -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/ibmruntimes/semeru${version}-binaries/releases" | jq -c '.[0].assets | map(select(.name | contains("aarch64_mac"))) | map(select(.name | endswith(".pkg"))) | .[0]')
+    #    file_name=$(echo "$latest" | jq '.name')
+    #    download_url=$(echo "$latest" | jq '.browser_download_url')
+    #    wget -q "$download_url" | sudo installer -pkg -target /
+    #    sudo installer -pkg "$file_name" -target /
+    #    rm "$file_name"
+    #fi
+    if [ ! -e "/Library/Java/JavaVirtualMachines/openjdk-${version}/" ]; then
+        latest=$(curl -s -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/adoptium/temurin${version}-binaries/releases" | jq -c '.[0].assets | map(select(.name | contains("jdk_aarch64_mac_hotspot"))) | map(select(.name | endswith(".pkg"))) | .[0]')
+        file_name=$(echo "$latest" | jq '.name')
+        download_url=$(echo "$latest" | jq '.browser_download_url')
+        wget -q "$download_url" | sudo installer -pkg -target /
+        sudo installer -pkg "$file_name" -target /
+        rm "$file_name"
     fi
+}
+
+function install_jdks_macos {
+    install_jdk_macos 11
+    install_jdk_macos 17
+    install_jdk_macos 21
 }
 
 function install_jdk_debian {
@@ -51,7 +69,7 @@ function install_jdk_debian {
 
 function install_jdk {
     if is_macos; then
-        install_jdk_macos
+        install_jdks_macos
     else
         install_jdk_debian
     fi
