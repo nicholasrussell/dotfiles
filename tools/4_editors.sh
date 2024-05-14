@@ -31,7 +31,8 @@ function install_emacs_debian {
 
 function install_emacs_macos {
 	# brew reinstall gcc libgccjit
-	brew_install cask emacs --with-imagemagick --with-json --with-mailutils --with-native-comp --with-tree-sitter
+	brew tap d12frosted/emacs-plus
+	brew_install cask emacs-plus --with-imagemagick --with-mailutils --with-native-comp
 	launchctl load -w ~/Library/LaunchAgents/gnu.emacs.daemon.plist
 }
 
