@@ -10,6 +10,7 @@ function apt_tools {
 		jq
 		unzip
 		fontconfig
+                net-tools
 		# Emacs
 		libgccjit0
 		libgccjit-10-dev
@@ -52,7 +53,7 @@ function apt_tools {
 		guile-3.0
 		guile-3.0-dev
 		# wm
-		i3
+		# i3
 		# misc
 		htop
 		ripgrep
@@ -63,10 +64,10 @@ function apt_tools {
 	sudo add-apt-repository -y ppa:neovim-ppa/unstable >/dev/null 2>&1
 
 	# i3
-	/usr/lib/apt/apt-helper download-file https://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2023.02.18_all.deb keyring.deb SHA256:a511ac5f10cd811f8a4ca44d665f2fa1add7a9f09bef238cdfad8461f5239cc4
-	sudo apt install ./keyring.deb
-	rm keyring.deb
-	echo "deb http://debian.sur5r.net/i3/ $(grep '^DISTRIB_CODENAME=' /etc/lsb-release | cut -f2 -d=) universe" | sudo tee /etc/apt/sources.list.d/sur5r-i3.lis
+	#/usr/lib/apt/apt-helper download-file https://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2023.02.18_all.deb keyring.deb SHA256:a511ac5f10cd811f8a4ca44d665f2fa1add7a9f09bef238cdfad8461f5239cc4
+	#sudo apt install ./keyring.deb
+	#rm keyring.deb
+	#echo "deb http://debian.sur5r.net/i3/ $(grep '^DISTRIB_CODENAME=' /etc/lsb-release | cut -f2 -d=) universe" | sudo tee /etc/apt/sources.list.d/sur5r-i3.list
 
 	sudo apt-get -qq update
 
@@ -77,9 +78,4 @@ function apt_tools {
 
 if is_debian; then
     apt_tools
-elif is_macos; then
-    brew_install coreutils
-    brew_install fd
-    brew_install cmake
-    brew_install libvterm
 fi

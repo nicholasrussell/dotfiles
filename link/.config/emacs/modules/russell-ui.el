@@ -81,7 +81,7 @@
          (px-x (caddr geo))
          (cm-x (/ (car mm-size) 10.0))
          (ppcm (if (> cm-x 0) (/ px-x cm-x) 0)))
-    (set-face-attribute 'default frame :font "Source Code Pro" :height (if (< ppcm 40) 130 180) :weight 'normal :width 'normal)))
+    (set-face-attribute 'default frame :font "SauceCodePro Nerd Font" :height (if (< ppcm 35) 130 180) :weight 'normal :width 'normal)))
 (if (daemonp)
   (add-hook 'server-after-make-frame-hook
         (lambda ()

@@ -38,11 +38,18 @@ function bootstrap {
         xcode-select --install
         install_homebrew
         brew update > /dev/null 2>&1
+        brew_install coreutils
+        brew_install gcc
+        brew_install libgccjit
+        brew_install openssl
+        brew_install fd
+        brew_install cmake
+        brew_install git --build_from_source
+        brew_install libvterm
         brew_install wget
         brew_install curl
-        brew_install git --build_from_source
-        brew_install openssl
         brew_install jq
+        brew_install tree-sitter
     elif is_debian; then
         sudo apt-get -qq update
         local tools

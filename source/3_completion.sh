@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if is_macos; then
-    [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+    [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]] && source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
 elif in_emacs; then
     if is_debian; then
         source "/etc/bash_completion"

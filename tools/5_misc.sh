@@ -10,13 +10,6 @@ function install_fonts {
     else
         log_info "Installing fonts..."
         font_installed=false
-        if ! fc-list | grep -q SourceCodePro || [[ -v DOTFILES_TOOLS_FORCE ]]; then
-            wget -q https://fonts.google.com/download?family=Source%20Code%20Pro -O SourceCodePro.zip
-            unzip -qq SourceCodePro.zip -d SourceCodePro
-            sudo mv SourceCodePro/*.ttf /usr/local/share/fonts
-            rm -rf SourceCodePro*
-            font_installed=true
-        fi
         if ! fc-list | grep -q SauceCodePro || [[ -v DOTFILES_TOOLS_FORCE ]]; then
             wget -q https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/SourceCodePro.zip -O SauceCodePro.zip
             unzip -qq SauceCodePro.zip -d SauceCodePro

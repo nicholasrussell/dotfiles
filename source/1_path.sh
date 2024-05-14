@@ -9,9 +9,9 @@ export XDG_STATE_HOME="$HOME/.local/state"
 
 if [ -z "${HOMEBREW_PREFIX}" ]; then
     if is_macos; then
-        export HOMEBREW_PREFIX="/opt/homebrew"; # /usr/local for macOS on Intel, /opt/homebrew for macOS on Apple Silicon/ARM
+        export HOMEBREW_PREFIX="/opt/homebrew" # /usr/local for macOS on Intel, /opt/homebrew for macOS on Apple Silicon/ARM
     else
-        export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew";
+        export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
     fi
 fi
 export CARGO_PATH="$HOME/.cargo"

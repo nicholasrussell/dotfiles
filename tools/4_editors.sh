@@ -30,7 +30,8 @@ function install_emacs_debian {
 }
 
 function install_emacs_macos {
-	brew_install cask emacs
+	# brew reinstall gcc libgccjit
+	brew_install cask emacs --with-imagemagick --with-json --with-mailutils --with-native-comp --with-tree-sitter
 	launchctl load -w ~/Library/LaunchAgents/gnu.emacs.daemon.plist
 }
 
@@ -48,7 +49,7 @@ install_emacs
 function install_nvim {
 	log_info "Installing nvim..."
 	if is_macos; then
-		brew_install install neovim
+		brew_install neovim
 	else
 		if ! command -v nvim >/dev/null 2>&1 || [[ -v DOTFILES_TOOLS_FORCE ]]; then
 			sudo apt-get -qq -y install neovim >/dev/null 2>&1
@@ -64,10 +65,28 @@ function install_nvim {
 
 install_nvim
 
-# IntelliJ Idea
-# TODO
+# JetBrains
+function install_jetbrains_toolbox {
+	log_info "Installing JetBrains Toolbox..."
+	if is_macos; then
+		brew_install cask jetbrains-toolbox
+	else
+		log_warn "Implement for Debian."
+	fi
+	log_info "Finished installing JetBrains Toolbox."
+}
+
+install_jetbrains_toolbox
 
 # VSCode
-# TODO
+function install_vs_code {
+	log_info "Installing Visual Studio Code..."
+	if is_macos; then
+		brew_install cask visual-studio-code
+	else
+		log_warn "Implement for Debian."
+	fi
+	log_info "Finished installing Visual Studio Code."
+}
 
 log_header2 "Finished installing editors.\n"
