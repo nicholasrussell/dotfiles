@@ -78,4 +78,10 @@ function apt_tools {
 
 if is_debian; then
     apt_tools
+elif is_macos; then
+	brew_install postgresql # TODO Update for 15?
+	brew_install kubernetes-cli
+	brew_install awscli
+	brew_install watchman
+	brew_install kustomize
 fi

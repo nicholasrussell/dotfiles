@@ -26,18 +26,10 @@ function install_jenv {
 function install_jdk_macos {
 	# TODO FIXME
 	version="$1"
-	#if [ ! -e "/Library/Java/JavaVirtualMachines/ibm-semeru-open-${version}.jdk/" ]; then
-	#    latest=$(curl -s -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/ibmruntimes/semeru${version}-binaries/releases" | jq -c '.[0].assets | map(select(.name | contains("aarch64_mac"))) | map(select(.name | endswith(".pkg"))) | .[0]')
-	#    file_name=$(echo "$latest" | jq '.name')
-	#    download_url=$(echo "$latest" | jq '.browser_download_url')
-	#    wget -q "$download_url" | sudo installer -pkg -target /
-	#    sudo installer -pkg "$file_name" -target /
-	#    rm "$file_name"
-	#fi
-	if [ ! -e "/Library/Java/JavaVirtualMachines/openjdk-${version}/" ]; then
+	if [ ! -e "/Library/Java/JavaVirtualMachines/temurin-${version}.jdk/" ]; then
 		latest=$(curl -s -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/adoptium/temurin${version}-binaries/releases" | jq -c '.[0].assets | map(select(.name | contains("jdk_aarch64_mac_hotspot"))) | map(select(.name | endswith(".pkg"))) | .[0]')
-		file_name=$(echo "$latest" | jq '.name')
-		download_url=$(echo "$latest" | jq '.browser_download_url')
+		file_name=$(echo "$latest" | jq -r '.name')
+		download_url=$(echo "$latest" | jq -r '.browser_download_url')
 		wget -q "$download_url" | sudo installer -pkg -target /
 		sudo installer -pkg "$file_name" -target /
 		rm "$file_name"
@@ -76,10 +68,17 @@ function install_jdk {
 	fi
 }
 
+function jenv_add_jdk_macos {
+	version=$1
+	jenv add "/Library/Java/JavaVirtualMachines/temurin-${version}.jdk/Contents/Home/"
+}
+
 function configure_jenv {
 	log_info "Configuring jenv..."
 	if is_macos; then
-		jenv add /Library/Java/JavaVirtualMachines/ibm-semeru-open-17.jdk/Contents/Home/
+		jenv_add_jdk_macos 11
+		jenv_add_jdk_macos 17
+		jenv_add_jdk_macos 21
 		jenv rehash
 	else
 		if ! jenv versions | grep -q 21; then
@@ -87,11 +86,7 @@ function configure_jenv {
 			jenv rehash
 		fi
 	fi
-	if is_macos; then
-		jenv global ibm64-17.0.1
-	else
-		jenv global 21
-	fi
+	jenv global 21
 	log_info "Finished configuring jenv."
 }
 

@@ -19,3 +19,10 @@ for dotfiles_source_file in "$DOTFILES"/source/*; do
   source "$dotfiles_source_file"
 done
 unset dotfiles_source_file
+
+if [ -d "$XDG_CONFIG_HOME/work/source" ]; then
+  for work_source_file in "$XDG_CONFIG_HOME"/work/source/*; do
+    source "$work_source_file"
+  done
+  unset work_source_file
+fi
