@@ -114,7 +114,6 @@ HISTTIMEFORMAT='%F %T '
 ## Editor
 
 # Set global editor
-export VISUAL="emacsclient -c -a nvim"
-export EDITOR="emacsclient -t"
 export ALTERNATE_EDITOR="nvim"
-
+export VISUAL="emacsclient -c -a $ALTERNATE_EDITOR"
+export EDITOR="emacsclient -t"

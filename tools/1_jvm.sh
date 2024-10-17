@@ -30,7 +30,7 @@ function install_jdk_macos {
 		latest=$(curl -s -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "https://api.github.com/repos/adoptium/temurin${version}-binaries/releases" | jq -c '.[0].assets | map(select(.name | contains("jdk_aarch64_mac_hotspot"))) | map(select(.name | endswith(".pkg"))) | .[0]')
 		file_name=$(echo "$latest" | jq -r '.name')
 		download_url=$(echo "$latest" | jq -r '.browser_download_url')
-		wget -q "$download_url" | sudo installer -pkg -target /
+		wget -q "$download_url"
 		sudo installer -pkg "$file_name" -target /
 		rm "$file_name"
 	fi

@@ -41,7 +41,7 @@
 (add-to-list 'package-selected-packages 'all-the-icons)
 (add-to-list 'package-selected-packages 'all-the-icons-completion)
 (add-to-list 'package-selected-packages 'all-the-icons-dired)
-(add-to-list 'package-selected-packages 'dired-single)
+(add-to-list 'package-selected-packages 'nerd-icons)
 (add-to-list 'package-selected-packages 'diredfl)
 (add-to-list 'package-selected-packages 'doom-modeline)
 (add-to-list 'package-selected-packages 'emojify)
@@ -68,7 +68,6 @@
 (add-to-list 'package-selected-packages 'rust-mode)
 (add-to-list 'package-selected-packages 'treesit-auto)
 (add-to-list 'package-selected-packages 'typescript-mode)
-(add-to-list 'package-selected-packages 'yaml-mode)
 (add-to-list 'package-selected-packages 'yaml-pro)
 
 (provide 'russell-package)

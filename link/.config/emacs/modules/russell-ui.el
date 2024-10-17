@@ -78,10 +78,12 @@
   (let* ((attrs (frame-monitor-attributes frame))
          (geo (alist-get 'geometry attrs))
          (mm-size (alist-get 'mm-size attrs))
-         (px-x (caddr geo))
-         (cm-x (/ (car mm-size) 10.0))
-         (ppcm (if (> cm-x 0) (/ px-x cm-x) 0)))
-    (set-face-attribute 'default frame :font "SauceCodePro Nerd Font" :height (if (< ppcm 35) 130 180) :weight 'normal :width 'normal)))
+         (px-x (or (caddr geo) 0.0))
+         (cm-x (/ (or (car mm-size) 0.0) 10.0))
+         (ppcm (if (> cm-x 0) (/ px-x cm-x) 0))
+         (small-height 120)
+         (large-height 120))
+    (set-face-attribute 'default frame :font "SauceCodePro Nerd Font Mono" :height (if (< ppcm 35) small-height large-height) :weight 'normal :width 'normal)))
 (if (daemonp)
   (add-hook 'server-after-make-frame-hook
         (lambda ()
@@ -98,8 +100,8 @@
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
 ;; Dired
-; Keep dired to a single buffer. TODO integrate this automatically
-(require 'dired-single)
+; Keep dired to a single buffer
+(setf dired-kill-when-opening-new-dired-buffer t)
 ; extra dired font lock rules
 (when (display-graphic-p)
   (require 'diredfl)

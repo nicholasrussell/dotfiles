@@ -74,8 +74,6 @@
 (add-hook 'sh-mode-hook #'flymake-mode)
 
 ;; YAML
-(require 'yaml-mode)
-
 (require 'yaml-pro)
 (add-hook 'yaml-mode #'yaml-pro-ts-mode)
 

@@ -19,6 +19,7 @@ function macos_manual {
 	brew install bash
 	echo "${HOMEBREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells
 	chsh -s "${HOMEBREW_PREFIX}/bin/bash"
+	brew unlink md5sha1sum
 }
 
 function is_brew_formula_installed {

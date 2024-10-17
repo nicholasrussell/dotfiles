@@ -8,7 +8,10 @@
     (when (processp proc)
       (set-process-query-on-exit-flag proc nil))))
 
+(setq vterm-always-compile-module t)
+
 (require 'vterm)
+
 (setq vterm-max-scrollback 10000)
 (setq vterm-kill-buffer-on-exit t)
 (add-hook 'vterm-mode-hook 'russell/set-no-process-query-on-exit)
