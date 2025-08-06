@@ -15,14 +15,14 @@ function install_emacs_debian {
 		sudo rm -rf /opt/emacs
 		sudo git clone --depth 1 --branch emacs-29 https://git.savannah.gnu.org/git/emacs.git /opt/emacs
 		sudo chown -R nrussell:nrussell /opt/emacs
-		cd /opt/emacs
+		cd /opt/emacs || return
 		# export CC="gcc-10"
 		export CFLAGS="$CFLAGS -O2"
 		./autogen.sh
 		./configure --with-imagemagick --with-json --with-mailutils --with-native-compilation=aot --with-pgtk --with-tree-sitter --with-xwidgets
-		make -j$(nproc)
+		make -j"$(nproc)"
 		sudo make install
-		cd -
+		cd - || return
 		log_info "Finished installing Emacs."
 	else
 		log_info "Emacs already installed!"

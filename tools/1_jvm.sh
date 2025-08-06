@@ -8,7 +8,7 @@ function install_jenv_debian {
 		git clone https://github.com/jenv/jenv.git ~/.jenv
 		log_info "Finished installing jenv."
 	elif [[ -v DOTFILES_TOOLS_FORCE ]]; then
-		cd ~/.jenv && git pull -q && cd - >/dev/null
+		cd ~/.jenv && git pull -q && cd - >/dev/null || return
 		log_info "Finished updating jenv."
 	else
 		log_info "jenv is already installed!"

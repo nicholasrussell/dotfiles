@@ -5,12 +5,14 @@ function apt_tools {
 	local dotfiles_apt_tools
 	dotfiles_apt_tools=(
 		cmake
+		clangd-12
 		libtool
 		libtool-bin
 		jq
 		unzip
 		fontconfig
-                net-tools
+		net-tools
+		gnupg
 		# Emacs
 		libgccjit0
 		libgccjit-10-dev
@@ -30,14 +32,12 @@ function apt_tools {
 		libmagickwand-dev
 		libm17n-dev
 		libwebkit2gtk-4.1
-		## xprop
-		## xwininfo
 		# nvim
 		neovim
 		# Rust
 		lld
 		clang
-		# below are for Python 3, move to tools?
+		# Python
 		zlib1g-dev
 		libbz2-dev
 		libreadline-dev
@@ -52,22 +52,13 @@ function apt_tools {
 		# lisps
 		guile-3.0
 		guile-3.0-dev
-		# wm
-		# i3
 		# misc
 		htop
 		ripgrep
-		shellcheck
 	)
 
 	# neovim
 	sudo add-apt-repository -y ppa:neovim-ppa/unstable >/dev/null 2>&1
-
-	# i3
-	#/usr/lib/apt/apt-helper download-file https://debian.sur5r.net/i3/pool/main/s/sur5r-keyring/sur5r-keyring_2023.02.18_all.deb keyring.deb SHA256:a511ac5f10cd811f8a4ca44d665f2fa1add7a9f09bef238cdfad8461f5239cc4
-	#sudo apt install ./keyring.deb
-	#rm keyring.deb
-	#echo "deb http://debian.sur5r.net/i3/ $(grep '^DISTRIB_CODENAME=' /etc/lsb-release | cut -f2 -d=) universe" | sudo tee /etc/apt/sources.list.d/sur5r-i3.list
 
 	sudo apt-get -qq update
 
@@ -77,7 +68,7 @@ function apt_tools {
 }
 
 if is_debian; then
-    apt_tools
+	apt_tools
 elif is_macos; then
 	brew_install postgresql # TODO Update for 15?
 	brew_install kubernetes-cli
