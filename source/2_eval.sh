@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ -d "${HOMEBREW_PREFIX}" ]; then
-  eval "$(${HOMEBREW_PREFIX}/bin/brew shellenv)"
+  eval "$("${HOMEBREW_PREFIX}"/bin/brew shellenv)"
 fi
 
 if [ -d "$CARGO_PATH" ]; then . "$CARGO_PATH/env"; fi

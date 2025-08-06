@@ -396,7 +396,7 @@ function list_defined_characters() {
         char_arr=(${defined_char//=/ })
         char_name=${char_arr[0]}
         char_code=${char_arr[1]}
-        printf "%40s %7s %s\n" $char_name $char_code $(echo -e $char_code)
+        printf "%40s %7s %s\n" "$char_name" "$char_code" $(echo -e "$char_code")
     done
 }
 

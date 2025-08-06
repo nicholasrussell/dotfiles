@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-function log_header1 { echo -e "\r\033[1;36m$@\033[0m"; }
-function log_header2 { echo -e "\r\033[1;34m$@\033[0m"; }
-function log_info { echo -e "\r\033[0;34m$@\033[0m"; }
-function log_warn { echo -e "\r\033[1;33m$@\033[0m"; }
-function log_success { echo -e "\r\033[1;32m$@\033[0m"; }
-function log_error { echo -e "\r\033[1;31m$@\033[0m"; }
+function log_header1 { echo -e "\r\033[1;36m$*\033[0m"; }
+function log_header2 { echo -e "\r\033[1;34m$*\033[0m"; }
+function log_info { echo -e "\r\033[0;34m$*\033[0m"; }
+function log_warn { echo -e "\r\033[1;33m$*\033[0m"; }
+function log_success { echo -e "\r\033[1;32m$*\033[0m"; }
+function log_error { echo -e "\r\033[1;31m$*\033[0m"; }
 
 ## dotfiles functions
 function dotfiles_link {
@@ -39,18 +39,18 @@ function dotfiles_link {
       fi
     done
     if [ "$skip" = true ]; then continue; fi
-    if [ -f $dotfiles_link ]; then
-      dotfiles_link=$(echo $dotfiles_link | sed -e 's,'"$DOTFILES"/link/',,')
-      if [ -e ~/${dotfiles_link} ]; then
+    if [ -f "$dotfiles_link" ]; then
+      dotfiles_link=$(echo "$dotfiles_link" | sed -e 's,'"$DOTFILES"/link/',,')
+      if [ -e ~/"${dotfiles_link}" ]; then
         log_warn "Backing up ~/${dotfiles_link} to $DOTFILES/backup/link..."
-        cp -L ~/${dotfiles_link} $DOTFILES/backup/link
+        cp -L ~/"${dotfiles_link}" $DOTFILES/backup/link
       fi
-      file_dir="$(dirname ~/${dotfiles_link})"
-      if [ ! -d $file_dir ]; then
-        mkdir -p $file_dir
+      file_dir="$(dirname ~/"${dotfiles_link}")"
+      if [ ! -d "$file_dir" ]; then
+        mkdir -p "$file_dir"
       fi
       log_info "Linking ~/${dotfiles_link} to $DOTFILES/link/${dotfiles_link}..."
-      ln -sf $DOTFILES/link/${dotfiles_link} ~/${dotfiles_link}
+      ln -sf $DOTFILES/link/"${dotfiles_link}" ~/"${dotfiles_link}"
     fi
   done
   shopt -u dotglob
@@ -95,6 +95,7 @@ function dotfiles_tools {
   log_header1 "Installing tools...\n"
 
   local dotfiles_tools_file
+  # shellcheck disable=SC2068 # We want to include globbed files here
   for dotfiles_tools_file in ${included_scripts[@]}; do
     source "$dotfiles_tools_file"
   done
