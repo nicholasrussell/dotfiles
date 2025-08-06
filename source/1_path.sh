@@ -8,11 +8,11 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 
 if [ -z "${HOMEBREW_PREFIX}" ]; then
-    if is_macos; then
-        export HOMEBREW_PREFIX="/opt/homebrew" # /usr/local for macOS on Intel, /opt/homebrew for macOS on Apple Silicon/ARM
-    else
-        export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
-    fi
+  if is_macos; then
+    export HOMEBREW_PREFIX="/opt/homebrew" # /usr/local for macOS on Intel, /opt/homebrew for macOS on Apple Silicon/ARM
+  else
+    export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+  fi
 fi
 export CARGO_PATH="$HOME/.cargo"
 export JENV_PATH="$HOME/.jenv"

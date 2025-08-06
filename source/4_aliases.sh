@@ -10,13 +10,13 @@ else
 fi
 
 function _dotenv() {
-    env_file=".env"
-    if [ -f ".env.local" ]; then
-        env_file=".env.local"
-    elif [ -f ".env.dev" ]; then
-        env_file=".env.dev"
-    fi
-    set -a && source $env_file && set +a
+  env_file=".env"
+  if [ -f ".env.local" ]; then
+    env_file=".env.local"
+  elif [ -f ".env.dev" ]; then
+    env_file=".env.dev"
+  fi
+  set -a && source $env_file && set +a
 }
 
 alias dotenv="_dotenv"

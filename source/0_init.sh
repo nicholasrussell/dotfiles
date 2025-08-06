@@ -2,44 +2,45 @@
 
 ## Init
 if [ -z "${DOTFILES:+1}" ]; then
-    export DOTFILES=~/.dotfiles
+  export DOTFILES=~/.dotfiles
 fi
 
 INTERACTIVE=false
 case $- in
-  *i*) INTERACTIVE=true;;
-    *) ;;
+  *i*) INTERACTIVE=true ;;
+  *) ;;
 esac
 
 ## OS detection
 function is_macos {
-    [[ "$OSTYPE" =~ ^darwin ]] || return 1
+  [[ "$OSTYPE" =~ ^darwin ]] || return 1
 }
 
 function is_debian {
-    [[ -f "/etc/debian_version" ]] || return 1
+  [[ -f "/etc/debian_version" ]] || return 1
 }
 
 function is_ubuntu {
-    [[ "$(cat /etc/issue 2> /dev/null)" =~ Ubuntu ]] || return 1
+  [[ "$(cat /etc/issue 2>/dev/null)" =~ Ubuntu ]] || return 1
 }
 
 function is_guix {
-    [[ -f "/etc/os-release" && "$(cat /etc/os-release 2> /dev/null)" =~ Guix ]] || return 1
+  [[ -f "/etc/os-release" && "$(cat /etc/os-release 2>/dev/null)" =~ Guix ]] || return 1
 }
 
 function is_nix {
-    return 1
+  return 1
 }
 
 function get_os {
-    for os in macos ubuntu guix nix; do
-        is_$os; [[ $? == "${1:-0}" ]] && echo $os
-    done
+  for os in macos ubuntu guix nix; do
+    is_$os
+    [[ $? == "${1:-0}" ]] && echo $os
+  done
 }
 
 function in_emacs {
-    [[ -v INSIDE_EMACS ]] || return 1
+  [[ -v INSIDE_EMACS ]] || return 1
 }
 
 ## Theme
@@ -59,10 +60,10 @@ shopt -s checkwinsize
 
 # If set, the pattern "**" used in a pathname expansion context will
 # match all files and zero or more directories and subdirectories.
-shopt -s globstar 2> /dev/null
+shopt -s globstar 2>/dev/null
 
 # Case-insensitive globbing (used in pathname expansion)
-shopt -s nocaseglob;
+shopt -s nocaseglob
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
