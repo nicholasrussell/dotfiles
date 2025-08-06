@@ -1,12 +1,19 @@
 return {
   -- add nord
   { "shaunsingh/nord.nvim" },
+  --- add nightfox
+  {
+    "EdenEast/nightfox.nvim",
+    opts = {
+      terminal_colors = true,
+    },
+  },
 
-  -- Configure LazyVim to load gruvbox
+  -- Configure LazyVim to load colorscheme
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "nord",
+      colorscheme = "nordfox",
     },
   },
 }
