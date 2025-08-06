@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function apt_install() {
-	sudo apt-get -qq -y install "$1" >/dev/null 2>&1
+  sudo apt-get -qq -y install "$1" >/dev/null 2>&1
 }
 
 log_header2 "Installing C tools..."
