@@ -1,10 +1,15 @@
 return {
-  -- add nord
   { "shaunsingh/nord.nvim" },
-  --- add nightfox
   {
     "EdenEast/nightfox.nvim",
     opts = {
+      terminal_colors = true,
+    },
+  },
+  {
+    "Mofiqul/vscode.nvim",
+    opts = {
+      style = "light",
       terminal_colors = true,
     },
   },
@@ -13,7 +18,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "nordfox",
+      colorscheme = "vscode",
     },
   },
 }
