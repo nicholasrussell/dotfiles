@@ -6,8 +6,13 @@ function apt_install() {
 
 log_header2 "Installing C tools..."
 
-apt_install clang
-apt_install gdb
-apt_install valgrind
+if is_debian; then
+  apt_install clang
+  apt_install gdb
+  apt_install valgrind
+elif is_macos; then
+  brew install llvm
+  brew install gdb
+fi
 
 log_header2 "Finished installing C tools.\n"
