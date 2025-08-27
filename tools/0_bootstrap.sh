@@ -69,6 +69,7 @@ function bootstrap {
     brew_install curl
     brew_install jq
     brew_install tree-sitter
+    brew_install cask ghostty
   elif is_debian; then
     sudo apt-get -qq update
     local tools
@@ -83,6 +84,7 @@ function bootstrap {
       gcc
       procps
       file
+      # ghostty # https://github.com/mkasberg/ghostty-ubuntu/releases, sudo apt install ./ghostty_*.deb
     )
     sudo apt-get -qq -y install "${tools[@]}" >/dev/null 2>&1
     install_homebrew

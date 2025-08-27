@@ -95,7 +95,7 @@ function bash_prompt_command() {
   local EXIT_CODE="$?"
   local title_text="${PWD/#$HOME/\~}"
   local prompt_prefix="$(echo -ne "$CHR_LAMBDA")\[$CLR_NONE\] ${debian_chroot:+($debian_chroot)}\[$CLR_BLUE\]\w\[$CLR_NONE\]"
-  local prompt_suffix="\n\[$CLR_WHITEi\]$PROMPT_CHAR\[$CLR_NONE\] "
+  local prompt_suffix="\n\[$CLR_WHITE\]$PROMPT_CHAR\[$CLR_NONE\] "
   local prompt_git=" [\[$CLR_CYAN\]%s\[$CLR_NONE\]]"
   if [ $EXIT_CODE != 0 ]; then
     prompt_prefix="\[$CLR_RED\]${prompt_prefix}"

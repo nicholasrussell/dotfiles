@@ -50,7 +50,7 @@ install_emacs
 function install_nvim {
   log_info "Installing nvim..."
   if is_macos; then
-    brew_install neovim
+    brew_install --HEAD neovim
   else
     if ! command -v nvim >/dev/null 2>&1 || [[ -v DOTFILES_TOOLS_FORCE ]]; then
       sudo apt-get -qq -y install neovim >/dev/null 2>&1

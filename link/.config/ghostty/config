@@ -1,0 +1,24 @@
+background = #ffffff
+foreground = #000000
+
+palette = 0=#333333
+palette = 1=#CD3131
+palette = 2=#0DBC79
+palette = 3=#E5E510
+palette = 4=#2472C8
+palette = 5=#BC3FBC
+palette = 6=#0598BC
+palette = 7=#E5E5E5
+palette = 8=#666666
+palette = 9=#F14C4C
+palette = 10=#23D18B
+palette = 11=#F5F543
+palette = 12=#3B8EEA
+palette = 13=#D670D6
+palette = 14=#29B8DB
+palette = 15=#FFFFFF
+
+font-family = SauceCodePro Nerd Font Mono
+
+macos-titlebar-proxy-icon = hidden
+title = " "
