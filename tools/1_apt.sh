@@ -23,6 +23,7 @@ function apt_tools {
     giflib-tools # instead of libungif-bin
     libtiff-dev
     libtree-sitter-dev
+    tree-sitter-cli
     libjansson4
     libjansson-dev
     libacl1-dev
@@ -75,4 +76,6 @@ elif is_macos; then
   brew_install awscli
   brew_install watchman
   brew_install kustomize
+  brew_install tree-sitter
+  brew_install tree-sitter-cli
 fi
