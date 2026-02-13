@@ -47,8 +47,9 @@
 (setq frame-title-format '("%b")
       icon-title-format frame-title-format)
 (menu-bar-mode 0)
-(tool-bar-mode 0)
-(scroll-bar-mode 0)
+(when (display-graphic-p)
+  (tool-bar-mode 0)
+  (scroll-bar-mode 0))
 (tooltip-mode 0)
 (setq use-dialog-box nil)
 

@@ -29,6 +29,7 @@
                     (encode-time today))))
    (mapcar #'car package-archives)))
 
+; todo: fix first run
 (defun russell/package-initialize ()
   (when package-enable-at-startup
     (package-initialize)

@@ -9,9 +9,6 @@
 #[apply]
 #  whitespace = fix
 
-[credential]
-	helper = cache --timeout=3600
-
 [init]
 	templatedir = ~/.config/git/templates
 	defaultBranch = main

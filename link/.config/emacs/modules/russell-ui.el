@@ -130,8 +130,6 @@
 (keymap-global-set "C-h K" #'describe-keymap)
 
 ;; File tree
-; https://github.com/Alexander-Miller/treemacs/issues/1017#issuecomment-1515602288
-(add-to-list 'image-types 'svg)
 (require 'treemacs)
 (setq treemacs-follow-after-init t
       treemacs-is-never-other-window t

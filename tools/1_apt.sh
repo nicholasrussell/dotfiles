@@ -56,6 +56,7 @@ function apt_tools {
     # misc
     htop
     ripgrep
+    lazygit
   )
 
   # neovim
@@ -78,4 +79,5 @@ elif is_macos; then
   brew_install kustomize
   brew_install tree-sitter
   brew_install tree-sitter-cli
+  brew_install lazygit
 fi
