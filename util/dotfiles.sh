@@ -22,10 +22,9 @@ function dotfiles_link {
   shopt -s nullglob
 
   declare -A link_exclude
-  local library_list=($DOTFILES/link/Library/**/*)
   local empty_list=()
-  link_exclude[guix]=library_list[@]
-  link_exclude[ubuntu]=library_list[@]
+  link_exclude[guix]=empty_list[@]
+  link_exclude[ubuntu]=empty_list[@]
   link_exclude[macos]=empty_list[@]
 
   local dotfiles_link

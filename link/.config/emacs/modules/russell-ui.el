@@ -52,19 +52,28 @@
 (add-hook 'text-mode-hook #'hl-line-mode)
 (add-hook 'conf-mode-hook #'hl-line-mode)
 
+;; Diff highlight
+(require 'diff-hl)
+(global-diff-hl-mode)
+(add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+
 ;; Pulse line for cursor point focus
 (require 'pulsar)
 (setq pulsar-delay 0.025)
 (setq pulsar-iterations 10)
 (pulsar-global-mode 1)
 
-;; all-the-icons
-; First run: M-x all-the-icons-install-fonts
+;; nerd-icons
+; First run: M-x nerd-icons-install-fonts
 (when (display-graphic-p)
-  (require 'all-the-icons)
-  (require 'all-the-icons-completion)
-  (require 'all-the-icons-dired)
-  (add-hook 'dired-mode-hook #'all-the-icons-dired-mode))
+  ; (require 'nerd-icons-completion)
+  ; (setq nerd-icons-completion-category-icon-alist
+  ;       '((file . nerd-icons-completion-get-icon)
+  ;         (project-file . nerd-icons-completion-get-icon))
+  ; (nerd-icons-completion-mode)
+  ; (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
+  (require 'nerd-icons-dired)
+  (add-hook 'dired-mode-hook #'nerd-icons-dired-mode))
 
 ;;; Theme
 (setq custom-theme-directory (expand-file-name "themes" russell/emacs-home))
@@ -81,9 +90,9 @@
          (px-x (or (caddr geo) 0.0))
          (cm-x (/ (or (car mm-size) 0.0) 10.0))
          (ppcm (if (> cm-x 0) (/ px-x cm-x) 0))
-         (small-height 120)
-         (large-height 120))
-    (set-face-attribute 'default frame :font "SauceCodePro Nerd Font Mono" :height (if (< ppcm 35) small-height large-height) :weight 'normal :width 'normal)))
+         (small-height 130)
+         (large-height 180))
+    (set-face-attribute 'default frame :font "SauceCodePro Nerd Font Mono" :height (if (< ppcm 55) small-height large-height) :weight 'normal :width 'normal)))
 (if (daemonp)
   (add-hook 'server-after-make-frame-hook
         (lambda ()
@@ -131,7 +140,7 @@
 
 ;; File tree
 (require 'treemacs)
-(setq treemacs-follow-after-init t
+(setq ; treemacs-follow-after-init t
       treemacs-is-never-other-window t
       treemacs-sorting 'alphabetic-case-insensitive-asc)
 (require 'treemacs-magit)

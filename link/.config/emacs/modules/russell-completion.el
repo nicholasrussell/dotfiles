@@ -60,9 +60,6 @@
 
 ;;; Corfu
 (require 'corfu nil)
-(unless (display-graphic-p)
-  (require 'corfu-terminal)
-  (corfu-terminal-mode +1))
 ;; Setup corfu for popup like completion
 (customize-set-variable 'corfu-cycle t)
 (customize-set-variable 'corfu-auto t)

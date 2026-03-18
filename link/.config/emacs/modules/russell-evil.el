@@ -9,12 +9,15 @@
 (customize-set-variable 'evil-undo-system 'undo-tree)
 
 (require 'evil)
+(defvar evil-mode-buffers '()) ; https://github.com/emacs-evil/evil/issues/1983
 (evil-mode 1)
+
+(require 'evil-nerd-commenter)
 
 ; vim-like search
 (evil-select-search-module 'evil-search-module 'evil-search)
-; turn on evil nerd commenter
-(evil-select-search-module 'evil-search-module 'evil-search)
+; enable evil nerd commenter
+(evilnc-default-hotkeys)
 ; Make C-g revert to normal state
 (keymap-set evil-insert-state-map "C-g" 'evil-normal-state)
 ; Rebind `universal-argument' to 'C-M-u' since 'C-u' now scrolls the buffer

@@ -2,21 +2,23 @@
 
 if is_macos; then
   alias ls="gls --color=auto --group-directories-first --time-style=long-iso -hv"
-
-  alias load-emacs-daemon="launchctl load -w ~/Library/LaunchAgents/gnu.emacs.daemon.plist"
-  alias unload-emacs-daemon="launchctl unload -w ~/Library/LaunchAgents/gnu.emacs.daemon.plist"
 else
   alias ls="ls --color=auto --group-directories-first --time-style=long-iso -hv"
 fi
 
 function _dotenv() {
-  env_file=".env"
+  local env_file=".env"
   if [ -f ".env.local" ]; then
     env_file=".env.local"
   elif [ -f ".env.dev" ]; then
     env_file=".env.dev"
   fi
-  set -a && source $env_file && set +a
+  if [ -f "$env_file" ]; then
+    set -a && source "$env_file" && set +a
+  else
+    echo "No env file found" >&2
+    return 1
+  fi
 }
 
 alias dotenv="_dotenv"

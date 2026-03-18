@@ -1,7 +1,10 @@
 ;;; russell-term.el -*- lexical-binding: t; -*-
 
-; Fix shell PATH
-(exec-path-from-shell-initialize)
+; Fix shell PATH on macOS
+(when russell/env-mac-os-p
+  (require 'exec-path-from-shell)
+  ; (add-to-list 'exec-path-from-shell-variables "JAVA_HOME")
+  (exec-path-from-shell-initialize))
 
 (defun russell/set-no-process-query-on-exit ()
   (let ((proc (get-buffer-process (current-buffer))))

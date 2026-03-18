@@ -8,7 +8,6 @@
 (customize-set-variable 'org-link-descriptive t)
 ;; Visually indent org-mode files to a given header level
 (add-hook 'org-mode-hook #'org-indent-mode)
-(add-hook 'org-mode-hook #'org-appear-mode)
 ;; Hide markup markers
 (customize-set-variable 'org-hide-emphasis-markers t)
 (require 'org-appear)
@@ -20,30 +19,45 @@
 (add-hook 'eglot-mode (lambda () (keymap-local-set "<remap> <xref-find-apropos>" #'consult-eglot-symbols)))
 
 ;;; Tree Sitter
-;(require 'treesit-auto)
+(require 'treesit-auto)
+(treesit-auto-add-to-auto-mode-alist)
 ;(setq treesit-auto-install t)
-;(global-treesit-auto-mode)
 ;(treesit-auto-install-all)
-;(treesit-auto-add-to-auto-mode-alist)
+
+;;; dap-mode
+; (setq dap-auto-configure-features '(sessions locals controls tooltip breakpoints expressions))
+; (dap-mode 1)
 
 ;;; Languages
 ;; Clojure
 (require 'clojure-mode)
-(with-eval-after-load "clojure-mode"
-  (require 'cider)
-  (customize-set-variable 'cider-repl-display-help-banner nil)
-  (customize-set-variable 'cider-repl-pop-to-buffer-on-connect 'display-only)
-  (require 'clj-refactor)
-  (add-hook 'clojure-mode-hook
-            (lambda ()
-              (clj-refactor-mode 1)
-              (cljr-add-keybindings-with-prefix "C-c r")))
-  (with-eval-after-load "flycheck"
-    (require 'flycheck-clojure)
-    (flycheck-clojure-setup)))
+(require 'cider)
+(customize-set-variable 'cider-repl-display-help-banner nil)
+(customize-set-variable 'cider-repl-pop-to-buffer-on-connect 'display-only)
+(require 'clj-refactor)
+(add-hook 'clojure-mode-hook
+          (lambda ()
+            (clj-refactor-mode 1)
+            (cljr-add-keybindings-with-prefix "C-c r")))
+(with-eval-after-load "flycheck"
+  (require 'flycheck-clojure)
+  (flycheck-clojure-setup))
 
 ;; Scheme
 (customize-set-variable 'scheme-program-name "guile")
+
+;; Java
+; (require 'lsp-java)
+(add-to-list 'major-mode-remap-alist '(java-mode . java-ts-mode))
+(add-to-list
+ 'eglot-server-programs
+ `((java-mode java-ts-mode) .
+   ("jdtls" "--java-executable" ,(expand-file-name (concat (or (getenv "JAVA_HOME") "~/.jenv/versions/25") "/bin/java"))
+            "-data" ,(expand-file-name (concat (or (getenv "XDG_CACHE_HOME") "~/.cache") "/emacs/jdtls-workspace")))))
+              ;:initializationOptions
+              ;(:bundles
+              ; [,(expand-file-name "~/.opt/jdtls/extras/com.microsoft.java.debug.plugin.jar")
+; (require 'dap-java)
 
 ;; JavaScript / TypeScript
 (require 'typescript-mode)
@@ -53,8 +67,10 @@
 (add-to-list 'auto-mode-alist '("\\.jsx?\\'" . js-react-mode))
 (setq-default typescript-indent-level 2)
 (setq-default js-indent-level 2)
-;(require 'dap-node)
-;(dap-node-setup)
+; (require 'dap-firefox)
+; (dap-firefox-setup)
+; (require 'dap-node)
+; (dap-node-setup)
 
 ;; Rust
 (defun russell/rust-cargo-fix ()
@@ -66,16 +82,18 @@
           (lambda ()
             (keymap-local-set "C-c C-c C-f" #'russell/rust-cargo-fix)))
 
+;; Native Debugging
+;(require 'dap-gdb)
+
 ;; sh
+(add-to-list 'eglot-server-programs '((sh-mode bash-ts-mode) . ("bash-language-server" "start")))
 (customize-set-variable 'flymake-shellcheck-allow-external-files t)
-(add-hook 'bash-ts-mode-hook 'flymake-shellcheck-load)
-(add-hook 'sh-mode-hook 'flymake-shellcheck-load)
 (add-hook 'bash-ts-mode-hook #'flymake-mode)
 (add-hook 'sh-mode-hook #'flymake-mode)
 
 ;; YAML
 (require 'yaml-pro)
-(add-hook 'yaml-mode #'yaml-pro-ts-mode)
+(add-hook 'yaml-mode-hook #'yaml-pro-ts-mode)
 
 ;; HCL
 (require 'hcl-mode)
@@ -100,11 +118,16 @@
 
 ;;; Register eglot modes
 (defvar russell/eglot-mode-list
-  '(;clojure-mode ; prefer CIDER
+  '(bash-ts-mode
+    c-mode
+    ;clojure-mode ; prefer CIDER
+    java-mode
+    java-ts-mode
     js-mode
     js-ts-mode
     rust-mode
     rust-ts-mode
+    sh-mode
     typescript-mode
     typescript-ts-mode))
 (dolist (mode russell/eglot-mode-list)

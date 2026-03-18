@@ -23,7 +23,6 @@
 (add-to-list 'package-selected-packages 'cape)
 (add-to-list 'package-selected-packages 'consult)
 (add-to-list 'package-selected-packages 'corfu)
-(add-to-list 'package-selected-packages 'corfu-terminal)
 (add-to-list 'package-selected-packages 'embark)
 (add-to-list 'package-selected-packages 'embark-consult)
 (add-to-list 'package-selected-packages 'marginalia)
@@ -38,10 +37,10 @@
 (add-to-list 'package-selected-packages 'magit)
 
 ;; UI
-(add-to-list 'package-selected-packages 'all-the-icons)
-(add-to-list 'package-selected-packages 'all-the-icons-completion)
-(add-to-list 'package-selected-packages 'all-the-icons-dired)
 (add-to-list 'package-selected-packages 'nerd-icons)
+(add-to-list 'package-selected-packages 'nerd-icons-completion)
+(add-to-list 'package-selected-packages 'nerd-icons-dired)
+(add-to-list 'package-selected-packages 'diff-hl)
 (add-to-list 'package-selected-packages 'diredfl)
 (add-to-list 'package-selected-packages 'doom-modeline)
 (add-to-list 'package-selected-packages 'emojify)
@@ -59,6 +58,8 @@
 (add-to-list 'package-selected-packages 'clj-refactor)
 (add-to-list 'package-selected-packages 'clojure-mode)
 (add-to-list 'package-selected-packages 'consult-eglot)
+; (add-to-list 'package-selected-packages 'dap-mode)
+(add-to-list 'package-selected-packages 'dape)
 (add-to-list 'package-selected-packages 'editorconfig)
 (add-to-list 'package-selected-packages 'flycheck-clojure)
 (add-to-list 'package-selected-packages 'geiser)
@@ -69,6 +70,9 @@
 (add-to-list 'package-selected-packages 'treesit-auto)
 (add-to-list 'package-selected-packages 'typescript-mode)
 (add-to-list 'package-selected-packages 'yaml-pro)
+
+;; AI
+(add-to-list 'package-selected-packages 'agent-shell)
 
 (provide 'russell-package)
 

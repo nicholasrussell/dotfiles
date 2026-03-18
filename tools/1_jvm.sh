@@ -21,6 +21,9 @@ function install_jenv {
   else
     install_jenv_debian
   fi
+
+  eval "$(jenv init -)"
+  # jenv enable-plugin export
 }
 
 function install_jdk_macos {
@@ -40,6 +43,7 @@ function install_jdks_macos {
   install_jdk_macos 11
   install_jdk_macos 17
   install_jdk_macos 21
+  install_jdk_macos 25
 }
 
 function install_jdk_debian {
@@ -79,6 +83,7 @@ function configure_jenv {
     jenv_add_jdk_macos 11
     jenv_add_jdk_macos 17
     jenv_add_jdk_macos 21
+    jenv_add_jdk_macos 25
     jenv rehash
   else
     if ! jenv versions | grep -q 21; then
@@ -87,7 +92,14 @@ function configure_jenv {
     fi
   fi
   jenv global 21
+  jenv shell 21
   log_info "Finished configuring jenv."
+}
+
+function install_java_lsp {
+  if is_macos; then
+    brew_install jdtls
+  fi
 }
 
 function install_lein_debian {
@@ -129,6 +141,7 @@ function install_clojure_lsp {
 install_jenv
 install_jdk
 configure_jenv
+install_java_lsp
 install_lein
 install_clojure_lsp
 

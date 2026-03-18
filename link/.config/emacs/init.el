@@ -39,20 +39,6 @@
            gcs-done))
 (add-hook 'emacs-startup-hook #'russell/display-startup-time)
 
-;; Early UI Customizations
-;; Do these here to prevent flickering
-(setq inhibit-startup-message t)
-(setq ring-bell-function 'ignore
-      visible-bell nil)
-(setq frame-title-format '("%b")
-      icon-title-format frame-title-format)
-(menu-bar-mode 0)
-(when (display-graphic-p)
-  (tool-bar-mode 0)
-  (scroll-bar-mode 0))
-(tooltip-mode 0)
-(setq use-dialog-box nil)
-
 ;; Directory to place additional Emacs config
 (add-to-list 'load-path (expand-file-name "modules" russell/emacs-home))
 
@@ -68,6 +54,7 @@
 (require 'russell-vcs)
 (require 'russell-ui)
 (require 'russell-lang)
+(require 'russell-ai)
 
 (provide 'init)
 

@@ -1,5 +1,17 @@
 ;;; early-init.el -*- lexical-binding: t; -*-
 
+;;; Early UI Customizations
+(setq inhibit-startup-message t)
+(setq ring-bell-function 'ignore
+      visible-bell nil)
+(setq frame-title-format '("%b")
+      icon-title-format frame-title-format)
+(menu-bar-mode 0)
+(tool-bar-mode 0)
+(scroll-bar-mode 0)
+(tooltip-mode 0)
+(setq use-dialog-box nil)
+
 ;;; Set up packages
 (require 'package)
 (require 'time-date)

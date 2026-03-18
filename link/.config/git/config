@@ -60,3 +60,7 @@
 	added = green
 	changed = red
 	untracked = cyan
+
+# Machine-specific settings
+[include]
+        path = config.local

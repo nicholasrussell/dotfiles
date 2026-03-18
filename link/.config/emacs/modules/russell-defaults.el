@@ -1,5 +1,10 @@
 ;;; russell-defaults.el -*- lexical-binding: t; -*-
 
+;;; Use command as meta on macos
+(when russell/env-mac-os-p
+  (setq mac-command-modifier 'meta)
+  (setq mac-option-modifier 'option))
+
 ;;; Buffers
 ;; Revert Dired and other buffers
 (customize-set-variable 'global-auto-revert-non-file-buffers t)
@@ -29,8 +34,6 @@
 ;; No matter which completion mode is used:
 (customize-set-variable 'tab-always-indent 'complete)
 (customize-set-variable 'completion-cycle-threshold 3)
-(customize-set-variable 'completion-category-overrides
-                        '((file (styles . (partial-completion)))))
 (customize-set-variable 'completions-detailed t)
 ;; use completion system instead of popup window
 (customize-set-variable 'xref-show-definitions-function
