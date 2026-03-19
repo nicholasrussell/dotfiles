@@ -15,10 +15,6 @@
 (when (not (file-exists-p russell/emacs-cache-home))
   (make-directory russell/emacs-cache-home t))
 
-;;; Emacs lisp source/compiled preference
-;; Prefer loading newest compiled .el file
-(customize-set-variable 'load-prefer-newer t)
-
 ;; UTF-8
 ; see: https://github.com/doomemacs/doomemacs/blob/986398504d09e585c7d1a8d73a6394024fe6f164/lisp/doom-start.el#L134
 (set-language-environment "UTF-8")

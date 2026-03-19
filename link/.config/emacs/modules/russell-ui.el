@@ -82,17 +82,24 @@
 (custom-theme-set-faces 'modus-operandi '(hl-line ((t (:box (:line-width (-1 . -1) :color "#e0e0e0" :style nil) :background "#ffffff")))))
 
 ;; Fonts
-(defun russell/set-fonts (&optional frame)
-  (interactive)
+(defun russell/frame-info (frame)
   (let* ((attrs (frame-monitor-attributes frame))
          (geo (alist-get 'geometry attrs))
          (mm-size (alist-get 'mm-size attrs))
-         (px-x (or (caddr geo) 0.0))
-         (cm-x (/ (or (car mm-size) 0.0) 10.0))
-         (ppcm (if (> cm-x 0) (/ px-x cm-x) 0))
-         (small-height 130)
+         (px-x (or (caddr geo) 0))
+         (px-y (or (cadddr geo) 0))
+         (mm-x (or (car mm-size) 0))
+         (mm-y (or (cadr mm-size) 0))
+         (ppmm-x (if (> mm-x 0) (/ (float px-x) (float mm-x)) 0.0))
+         (ppmm-y (if (> mm-y 0) (/ (float px-y) (float mm-y)) 0.0)))
+    `((px . (,px-x . ,px-y)) (mm . (,mm-x . ,mm-y)) (ppmm . (,ppmm-x . ,ppmm-y)))))
+(defun russell/set-fonts (&optional frame)
+  (interactive)
+  (let* ((frame-info (russell/frame-info frame))
+         (ppmm (car (alist-get 'ppmm frame-info)))
+         (small-height (if russell/env-mac-os-p 130 120))
          (large-height 180))
-    (set-face-attribute 'default frame :font "SauceCodePro Nerd Font Mono" :height (if (< ppcm 55) small-height large-height) :weight 'normal :width 'normal)))
+    (set-face-attribute 'default frame :font "SauceCodePro Nerd Font Mono" :height (if (< ppmm 5.5) small-height large-height) :weight 'normal :width 'normal)))
 (if (daemonp)
   (add-hook 'server-after-make-frame-hook
         (lambda ()
@@ -125,7 +132,9 @@
 ;; Opacity
 (defun russell/alpha (n)
   (interactive "nAlpha: ")
-  (set-frame-parameter nil 'alpha-background n))
+  (if russell/env-mac-os-p
+      (set-frame-parameter nil 'alpha n) ; macos is stuck on whole-frame alpha until better compositor support
+      (set-frame-parameter nil 'alpha-background n)))
 
 ;; Better help pages
 (require 'helpful)

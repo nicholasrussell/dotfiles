@@ -12,6 +12,10 @@
 (tooltip-mode 0)
 (setq use-dialog-box nil)
 
+;;; Emacs lisp source/compiled preference
+;; Prefer loading newest compiled .el file
+;(customize-set-variable 'load-prefer-newer t)
+
 ;;; Set up packages
 (require 'package)
 (require 'time-date)

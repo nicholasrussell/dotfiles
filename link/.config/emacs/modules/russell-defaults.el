@@ -103,21 +103,10 @@
 (require 'project)
 
 ;;; Undo system
-;; Use undo-tree
-(require 'undo-tree)
-(customize-set-variable 'undo-tree-history-directory-alist `(("." . ,(file-name-concat russell/emacs-cache-home "undo"))))
-(setq undo-tree-visualizer-diff t
-      undo-tree-auto-save-history t
-      undo-tree-enable-undo-in-region t
-      ;; Increase undo limits to avoid emacs prematurely truncating the undo
-      ;; history and corrupting the tree. This is larger than the undo-fu
-      ;; defaults because undo-tree trees consume exponentially more space,
-      ;; and then some when `undo-tree-enable-undo-in-region' is involved. See
-      ;; syl20bnr/spacemacs#12110
-      undo-limit 800000           ; 800kb (default is 160kb)
-      undo-strong-limit 12000000  ; 12mb  (default is 240kb)
-      undo-outer-limit 128000000) ; 128mb (default is 24mb)
-(global-undo-tree-mode 1)
+;; Use vundo to visualize the native undo tree
+(require 'vundo)
+(setq vundo-glyph-alist vundo-unicode-symbols)
+(keymap-global-set "C-x u" #'vundo)
 
 (provide 'russell-defaults)
 

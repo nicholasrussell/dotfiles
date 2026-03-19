@@ -17,6 +17,12 @@
 (customize-set-variable 'eglot-autoshutdown t)
 (require 'consult-eglot)
 (add-hook 'eglot-mode (lambda () (keymap-local-set "<remap> <xref-find-apropos>" #'consult-eglot-symbols)))
+(setq eglot-code-action-indications '(eldoc-hint)) ; 'margin is default but causes weird shifting issues when left-margin is 0 due to the lightbulb emoji size
+;; (setq eglot-code-action-indicator (nerd-icons-codicon "nf-cod-lightbulb"))
+;; (add-hook 'eglot-managed-mode-hook
+;;           (lambda ()
+;;             (setq-local left-margin-width 2)
+;;             (set-window-buffer (selected-window) (current-buffer))))
 
 ;;; Tree Sitter
 (require 'treesit-auto)
@@ -31,17 +37,17 @@
 ;;; Languages
 ;; Clojure
 (require 'clojure-mode)
+(require 'clojure-ts-mode)
 (require 'cider)
 (customize-set-variable 'cider-repl-display-help-banner nil)
 (customize-set-variable 'cider-repl-pop-to-buffer-on-connect 'display-only)
 (require 'clj-refactor)
-(add-hook 'clojure-mode-hook
-          (lambda ()
-            (clj-refactor-mode 1)
-            (cljr-add-keybindings-with-prefix "C-c r")))
-(with-eval-after-load "flycheck"
-  (require 'flycheck-clojure)
-  (flycheck-clojure-setup))
+(defun russell/clojure-setup ()
+  (clj-refactor-mode 1)
+  (cljr-add-keybindings-with-prefix "C-c r"))
+(add-hook 'clojure-mode-hook #'russell/clojure-setup)
+(add-hook 'clojure-ts-mode-hook #'cider-mode)
+(add-hook 'clojure-ts-mode-hook #'russell/clojure-setup)
 
 ;; Scheme
 (customize-set-variable 'scheme-program-name "guile")
@@ -100,7 +106,7 @@
 
 ;;; Editor Config
 (require 'editorconfig)
-(add-hook 'prog-mode-hook #'editorconfig-mode)
+(editorconfig-mode 1)
 
 ;;; Parinfer
 ; use parinfer for lisps
@@ -108,6 +114,7 @@
 (setq parinfer-rust-auto-download t)
 (defvar russell/parinfer-modes
   '(clojure-mode
+    clojure-ts-mode
     emacs-lisp-mode
     lisp-mode
     racket-mode
@@ -120,7 +127,8 @@
 (defvar russell/eglot-mode-list
   '(bash-ts-mode
     c-mode
-    ;clojure-mode ; prefer CIDER
+    clojure-mode
+    clojure-ts-mode
     java-mode
     java-ts-mode
     js-mode

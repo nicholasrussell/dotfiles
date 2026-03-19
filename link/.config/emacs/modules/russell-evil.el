@@ -6,7 +6,7 @@
 (customize-set-variable 'evil-want-C-i-jump nil)
 (customize-set-variable 'evil-respect-visual-line-mode t)
 (customize-set-variable 'evil-want-C-h-delete t)
-(customize-set-variable 'evil-undo-system 'undo-tree)
+(customize-set-variable 'evil-undo-system 'undo-redo)
 
 (require 'evil)
 (defvar evil-mode-buffers '()) ; https://github.com/emacs-evil/evil/issues/1983

@@ -1,18 +1,13 @@
 ;;; russell-package.el -*- lexical-binding: t; -*-
 
 ;;; Packages to try:
-;; tree-edit, evil-tree-edit
 ;; ibuffer-project
-;; tabspaces
-;; multi-vterm
-;; emacs-everywhere
-;; revisit solaire-mode
 ;; revisit vertico-posframe
 
 ;; Defaults
 (add-to-list 'package-selected-packages 'savehist)
-(add-to-list 'package-selected-packages 'undo-tree)
-(add-to-list 'package-selected-packages 'emacs-everywhere)
+(add-to-list 'package-selected-packages 'vundo)
+; (add-to-list 'package-selected-packages 'emacs-everywhere)
 
 ;; EVIL
 (add-to-list 'package-selected-packages 'evil)
@@ -57,11 +52,11 @@
 (add-to-list 'package-selected-packages 'cider)
 (add-to-list 'package-selected-packages 'clj-refactor)
 (add-to-list 'package-selected-packages 'clojure-mode)
+(add-to-list 'package-selected-packages 'clojure-ts-mode)
 (add-to-list 'package-selected-packages 'consult-eglot)
 ; (add-to-list 'package-selected-packages 'dap-mode)
 (add-to-list 'package-selected-packages 'dape)
 (add-to-list 'package-selected-packages 'editorconfig)
-(add-to-list 'package-selected-packages 'flycheck-clojure)
 (add-to-list 'package-selected-packages 'geiser)
 (add-to-list 'package-selected-packages 'geiser-guile)
 (add-to-list 'package-selected-packages 'hcl-mode)
