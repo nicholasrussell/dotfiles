@@ -1,54 +1,66 @@
 # Installing Guix
 
-## Reference
-[System Crafters (David Wilson) - Installing Guix as a Complete GNU/Linux System](https://www.youtube.com/watch?v=oSy-TmoxG_Y)
-[(Show Notes)](https://systemcrafters.net/craft-your-system-with-guix/full-system-install/)
-
-## Build the Base Image
-
-1. Download using `$DOTFILES/bin/download-guix`
-1. Create base image
-   - `qemu-img create -f qcow2 guix-base.img 40G`
-1. Boot the installer
-   - Windows: `& 'C:\Program Files\qemu\qemu-system-x86_64.exe' -drive file=guix-base.img,index=0,if=none,id=nvm -device nvme,serial=deadbeef,drive=nvm -m 32G -smp 10 -netdev user,id=vmnic,hostfwd=tcp::6022-:22 -device virtio-net,netdev=vmnic -accel whpx,kernel-irqchip=off -device VGA,vgamem_mb=32768 -boot d -cdrom guix-system-install-1.4.0.x86_64-linux.iso`
-1. Go through graphical install
-   - Enable substitutes
-   - For root and user passwords, use a temporary root pasword and leave user password blank (we will overwrite later)
-   - Finish install and reboot (restart qemu without boot and cdrom options)
-1. Log in to user account
-1. Place channel from [nonguix](https://gitlab.com/nonguix/nonguix) in `./guix/base-channels.scm` (see also: [SystemCrafters](https://github.com/SystemCrafters/guix-installer/blob/master/guix/base-channels.scm))
-1. Place installer from [SystemCrafters](https://github.com/SystemCrafters/guix-installer/blob/master/guix/installer.scm) in `./guix/installer.scm`
-1. Run `guix time-machine -C './guix/base-channels.scm' -- describe -f channels > './guix/channels.scm'`
-1. Run `export image=$(guix time-machine -C './guix/channels.scm' -- system image -t iso9660 './guix/installer.scm')`
-1. Run `mv $image ./guix-installer.iso`
-1. Configure sshd to allow local connections and scp guix-installer.iso to local machine
-
 ## Steps
 
-1. Get modified Guix base image
-2. Boot the installer
-   - qemu:
-     - `qemu-img create -f qcow2 guix.img 80G`
-     - `& 'C:\Program Files\qemu\qemu-system-x86_64.exe' -drive file=guix.img,index=0,if=none,id=nvm -device nvme,serial=deadbeef,drive=nvm -m 32G -smp 10 -netdev user,id=vmnic,hostfwd=tcp::6022-:22 -device virtio-net,netdev=vmnic -accel whpx,kernel-irqchip=off -device VGA,vgamem_mb=32768 -boot d -cdrom guix-installer.iso`
-3. Select locale then choose "Graphical install ..."
-4. Fill out the graphical installer
+1. Download iso from [https://guix.gnu.org/en/download/](https://guix.gnu.org/en/download/)
+2. Select locale then choose "Graphical install ..."
+3. Fill out the graphical installer
    - Enable substitutes
-   - For root and user passwords, use a temporary root pasword and leave user password blank (we will overwrite later)
-   - Desktop environments: GNOME, i3, Emacs EXWM
-   - Network services: Mozilla NSS
+   - For root and user passwords, use a temporary root password and leave user password blank (we will overwrite later)
+   - Desktop environments: xfce
    - Once you get to where the installer outputs the configuration file, stop
 5. Modify install
    - Press Ctrl + Alt + F3 to drop into new TTY
+   - `wget https://substitutes.nonguix.org/signing-key.pub`
+   - `mv signing-key.pub /etc/nonguix-signing-key.pub`
+   - `chown root:root /etc/nonguix-signing-key.pub`
+   - `cp /etc/nonguix-signing-key.pub /mnt/etc/nonguix-signing-key.pub`
+   - `emacs /etc/channels.scm`
+       ```scheme
+       (cons* (channel
+        (name 'nonguix)
+        (url "https://gitlab.com/nonguix/nonguix")
+        (introduction
+         (make-channel-introduction
+          "897c1a470da759236cc11798f4e0a5f7d4d59fbc"
+          (openpgp-fingerprint
+           "2A39 3FFF 68F4 EF7A 3D29  12AF 6F51 20A0 22FB B2D5"))))
+       %default-channels)
+       ```
+   - `cp /etc/channels.scm /mnt/etc/channels.scm`
+   - `chmod +w /mnt/etc/channels.scm`
    - `emacs /mnt/etc/config.scm`
-     - use-modules: `(use-modules (gnu) (nongnu packages linux))`
-     - operating system (before `locale`):
+     - use-modules:
+         ```scheme
+         (use-modules (gnu)
+                      (gnu services desktop)
+                      (nongnu packages linux)
+                      (nongnu system linux-initrd))
          ```
+     - operating system (before `locale`):
+         ```scheme
          (kernel linux)
+         (initrd microcode-initrd)
          (firmware (list linux-firmware))
          ```
+     - services:
+         ```scheme
+         (services
+           (modify-services
+             (append (list (service xfce-desktop-service-type)
+                           (set-xorg-configuration (xorg-configuration (keyboard-layout keyboard-layout))))
+                     %desktop-services)
+             (guix-service-type config =>
+                                (guix-configuration
+                                  (inherit config)
+                                  (substitute-urls
+                                    (append (list "https://substitutes.nonguix.org")
+                                            %default-substitute-urls))
+                                  (authorized-keys
+                                    (append (list (local-file "./nonguix-signing-key.pub"))
+                                            %default-authorized-guix-keys))))))
+         ```
    - `herd start cow-store /mnt`
-   - `cp /etc/channels.scm /mnt/etc/`
-   - `chmod +w /mnt/etc/channels.scm`
    - `guix time-machine -C /mnt/etc/channels.scm -- system init /mnt/etc/config.scm /mnt`
      - If ever hanging, `Ctrl+C` then re-run command
    - `reboot`
@@ -70,6 +82,35 @@
     - `guix pull`
     - `sudo -E guix system reconfigure ~/.config/guix/system.scm`
     - `reboot`
+
+## Steps 2
+1. Install Guix
+2. Log in to user
+3. Create `~/.config/guix/channels.scm`
+```scheme
+(cons* (channel
+        (name 'nonguix)
+        (url "https://gitlab.com/nonguix/nonguix")
+        (introduction
+         (make-channel-introduction
+          "897c1a470da759236cc11798f4e0a5f7d4d59fbc"
+          (openpgp-fingerprint
+           "2A39 3FFF 68F4 EF7A 3D29  12AF 6F51 20A0 22FB B2D5"))))
+       %default-channels)
+```
+4. `guix pull`
+5. `GUIX_PROFILE="/home/<user>/.config/guix/current"`
+6. `. "$GUIX_PROFILE/etc/profile"`
+7. `unset GUIX_PROFILE`
+8. `hash guix`
+9. `guix describe` and make sure nonguix is there
+10.
+```
+mkdir substitutes-keys
+wget https://substitutes.nonguix.org/signing-key.pub
+mv signing-key.pub substitutes-keys/nonguix-signing-key.pub
+sudo guix archive --authorize < substitutes-keys/nonguix-signing-key.pub
+```
 
 ## Virtualization Notes
 

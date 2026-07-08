@@ -23,3 +23,26 @@ function _dotenv() {
 
 alias dotenv="_dotenv"
 alias kill-emacs="emacsclient -e \"(kill-emacs)\""
+
+ctxlink() {
+  if [[ -z "$1" ]]; then
+    echo "Usage: ctxlink <directory_name>"
+    return 1
+  fi
+
+  local target="$HOME/dev/$1"
+
+  if [[ ! -d "$target" ]]; then
+    echo "Error: $target is not a directory"
+    return 1
+  fi
+
+  ln -s "$target" "$1"
+}
+
+_ctxlink_completions() {
+  local cur="${COMP_WORDS[COMP_CWORD]}"
+  COMPREPLY=($(cd ~/dev && compgen -d -- "$cur"))
+}
+
+complete -F _ctxlink_completions ctxlink

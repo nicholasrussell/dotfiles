@@ -4,6 +4,7 @@ vim.opt.conceallevel = 2
 vim.opt.confirm = true
 vim.opt.cursorline = true
 vim.opt.expandtab = true
+vim.opt.foldenable = false
 vim.opt.grepformat = "%f:%l:%c:%m"
 vim.opt.grepprg = "rg --vimgrep"
 vim.opt.ignorecase = true
@@ -45,4 +46,3 @@ vim.opt.wrap = false
 
 vim.g.have_nerd_font = true
 vim.g.markdown_recommended_style = 0
-
